@@ -1,0 +1,243 @@
+================================================================================
+If expression with else
+================================================================================
+
+if x > 0 { "positive" } else { "non-positive" }
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (if_expression
+      (comparison_expression
+        (primary_expression
+          (identifier_expression
+            (lower_identifier)))
+        (primary_expression
+          (integer_literal)))
+      (block
+        (statement_list
+          (primary_expression
+            (string_literal
+              (string_content)))))
+      (else_clause
+        (block
+          (statement_list
+            (primary_expression
+              (string_literal
+                (string_content)))))))))
+
+================================================================================
+If expression without else
+================================================================================
+
+if debug {
+  log("debug mode")
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (if_expression
+      (primary_expression
+        (identifier_expression
+          (lower_identifier)))
+      (block
+        (statement_list
+          (call_expression
+            (primary_expression
+              (identifier_expression
+                (lower_identifier)))
+            (argument_list
+              (argument
+                (primary_expression
+                  (string_literal
+                    (string_content)))))))))))
+
+================================================================================
+If else if chain
+================================================================================
+
+if x > 0 {
+  "positive"
+} else if x < 0 {
+  "negative"
+} else {
+  "zero"
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (if_expression
+      (comparison_expression
+        (primary_expression
+          (identifier_expression
+            (lower_identifier)))
+        (primary_expression
+          (integer_literal)))
+      (block
+        (statement_list
+          (primary_expression
+            (string_literal
+              (string_content)))))
+      (else_clause
+        (if_expression
+          (comparison_expression
+            (primary_expression
+              (identifier_expression
+                (lower_identifier)))
+            (primary_expression
+              (integer_literal)))
+          (block
+            (statement_list
+              (primary_expression
+                (string_literal
+                  (string_content)))))
+          (else_clause
+            (block
+              (statement_list
+                (primary_expression
+                  (string_literal
+                    (string_content)))))))))))
+
+================================================================================
+Is expression
+================================================================================
+
+if config.edition is Some(edition) {
+  use_edition(edition)
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (if_expression
+      (is_expression
+        (field_expression
+          (primary_expression
+            (identifier_expression
+              (lower_identifier)))
+          (lower_identifier))
+        (variant_pattern
+          (upper_identifier)
+          (tuple_pattern
+            (lower_identifier))))
+      (block
+        (statement_list
+          (call_expression
+            (primary_expression
+              (identifier_expression
+                (lower_identifier)))
+            (argument_list
+              (argument
+                (primary_expression
+                  (identifier_expression
+                    (lower_identifier)))))))))))
+
+================================================================================
+Is expression with struct pattern
+================================================================================
+
+if value is { x: 0, .. } {
+  "origin x"
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (if_expression
+      (is_expression
+        (primary_expression
+          (identifier_expression
+            (lower_identifier)))
+        (struct_pattern
+          (struct_pattern_field
+            (lower_identifier)
+            (literal_pattern
+              (integer_literal)))))
+      (block
+        (statement_list
+          (primary_expression
+            (string_literal
+              (string_content))))))))
+
+================================================================================
+Match on tuples
+================================================================================
+
+match (status, kind) {
+  (0, "lib") => "ok lib",
+  (code, _) => code,
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (match_expression
+      (primary_expression
+        (tuple_expression
+          (primary_expression
+            (identifier_expression
+              (lower_identifier)))
+          (primary_expression
+            (identifier_expression
+              (lower_identifier)))))
+      (match_arm
+        (tuple_pattern
+          (literal_pattern
+            (integer_literal))
+          (literal_pattern
+            (string_literal
+              (string_content))))
+        (primary_expression
+          (string_literal
+            (string_content))))
+      (match_arm
+        (tuple_pattern
+          (lower_identifier)
+          (wildcard_pattern))
+        (primary_expression
+          (identifier_expression
+            (lower_identifier)))))))
+
+================================================================================
+Nested if in match arm
+================================================================================
+
+match x {
+  n => if n > 0 { n } else { 0 },
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (match_expression
+      (primary_expression
+        (identifier_expression
+          (lower_identifier)))
+      (match_arm
+        (lower_identifier)
+        (if_expression
+          (comparison_expression
+            (primary_expression
+              (identifier_expression
+                (lower_identifier)))
+            (primary_expression
+              (integer_literal)))
+          (block
+            (statement_list
+              (primary_expression
+                (identifier_expression
+                  (lower_identifier)))))
+          (else_clause
+            (block
+              (statement_list
+                (primary_expression
+                  (integer_literal))))))))))

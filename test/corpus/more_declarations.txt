@@ -1,0 +1,528 @@
+================================================================================
+Newtype declaration
+================================================================================
+
+Blake3 = newtype of String
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (type_declaration
+      (upper_identifier)
+      (newtype_type_definition
+        (type_path
+          (upper_identifier))))))
+
+================================================================================
+Sum type declaration
+================================================================================
+
+Entry = Blob | Tree
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (type_declaration
+      (upper_identifier)
+      (sum_type_definition
+        (type_path
+          (upper_identifier))
+        (type_path
+          (upper_identifier))))))
+
+================================================================================
+Struct with field defaults
+================================================================================
+
+Config = struct {
+  optimize: Bool = false,
+  jobs: U64 = 8,
+  target: String,
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (type_declaration
+      (upper_identifier)
+      (struct_type_definition
+        (struct_type_body
+          (struct_field_declaration
+            (lower_identifier)
+            (type_path
+              (upper_identifier))
+            (primary_expression
+              (boolean_literal)))
+          (struct_field_declaration
+            (lower_identifier)
+            (type_path
+              (upper_identifier))
+            (primary_expression
+              (integer_literal)))
+          (struct_field_declaration
+            (lower_identifier)
+            (type_path
+              (upper_identifier))))))))
+
+================================================================================
+Struct with nested type
+================================================================================
+
+CargoToml = struct {
+  package: Package = struct {
+    name: String,
+    edition: String,
+  },
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (type_declaration
+      (upper_identifier)
+      (struct_type_definition
+        (struct_type_body
+          (struct_field_declaration
+            (lower_identifier)
+            (type_path
+              (upper_identifier))
+            (struct_type_definition
+              (struct_type_body
+                (struct_field_declaration
+                  (lower_identifier)
+                  (type_path
+                    (upper_identifier)))
+                (struct_field_declaration
+                  (lower_identifier)
+                  (type_path
+                    (upper_identifier)))))))))))
+
+================================================================================
+Enum with tuple payload
+================================================================================
+
+Token = enum {
+  Number(F64),
+  Text(String),
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (type_declaration
+      (upper_identifier)
+      (enum_type_definition
+        (enum_type_body
+          (enum_variant
+            (upper_identifier)
+            (tuple_variant_payload
+              (type_path
+                (upper_identifier))))
+          (enum_variant
+            (upper_identifier)
+            (tuple_variant_payload
+              (type_path
+                (upper_identifier)))))))))
+
+================================================================================
+Enum with alias variant
+================================================================================
+
+GitEntry = enum {
+  File: Blob,
+  Dir: Tree,
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (type_declaration
+      (upper_identifier)
+      (enum_type_definition
+        (enum_type_body
+          (enum_variant
+            (upper_identifier)
+            (alias_variant_payload
+              (type_path
+                (upper_identifier))))
+          (enum_variant
+            (upper_identifier)
+            (alias_variant_payload
+              (type_path
+                (upper_identifier)))))))))
+
+================================================================================
+Enum with shorthand alias
+================================================================================
+
+GitEntry = enum {
+  :Blob,
+  :Tree,
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (type_declaration
+      (upper_identifier)
+      (enum_type_definition
+        (enum_type_body
+          (enum_variant
+            (type_path
+              (upper_identifier)))
+          (enum_variant
+            (type_path
+              (upper_identifier))))))))
+
+================================================================================
+Function with keyword parameters
+================================================================================
+
+fn greet(name: String, { cheerful: Bool = false }) -> String {
+  name
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (function_declaration
+      (lower_identifier)
+      (parameter_clause
+        (parameter_item
+          (parameter
+            (binding_pattern
+              (lower_identifier))
+            (type_path
+              (upper_identifier))))
+        (parameter_item
+          (keyword_parameter_group
+            (keyword_parameter
+              (lower_identifier)
+              (type_path
+                (upper_identifier))
+              (primary_expression
+                (boolean_literal))))))
+      (return_type
+        (type_path
+          (upper_identifier)))
+      (block
+        (statement_list
+          (primary_expression
+            (identifier_expression
+              (lower_identifier))))))))
+
+================================================================================
+Function with no return type
+================================================================================
+
+fn do_stuff(x: U64) {
+  x
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (function_declaration
+      (lower_identifier)
+      (parameter_clause
+        (parameter_item
+          (parameter
+            (binding_pattern
+              (lower_identifier))
+            (type_path
+              (upper_identifier)))))
+      (block
+        (statement_list
+          (primary_expression
+            (identifier_expression
+              (lower_identifier))))))))
+
+================================================================================
+Function with destructuring parameter (tuple)
+================================================================================
+
+fn distance((x1, y1): (F64, F64), (x2, y2): (F64, F64)) -> F64 {
+  x1
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (function_declaration
+      (lower_identifier)
+      (parameter_clause
+        (parameter_item
+          (parameter
+            (binding_pattern
+              (tuple_pattern
+                (lower_identifier)
+                (lower_identifier)))
+            (tuple_type
+              (type_path
+                (upper_identifier))
+              (type_path
+                (upper_identifier)))))
+        (parameter_item
+          (parameter
+            (binding_pattern
+              (tuple_pattern
+                (lower_identifier)
+                (lower_identifier)))
+            (tuple_type
+              (type_path
+                (upper_identifier))
+              (type_path
+                (upper_identifier))))))
+      (return_type
+        (type_path
+          (upper_identifier)))
+      (block
+        (statement_list
+          (primary_expression
+            (identifier_expression
+              (lower_identifier))))))))
+
+================================================================================
+Function with destructuring parameter (struct)
+================================================================================
+
+fn greet({ first, last }: Name) -> String {
+  first
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (function_declaration
+      (lower_identifier)
+      (parameter_clause
+        (parameter_item
+          (parameter
+            (binding_pattern
+              (struct_pattern
+                (struct_pattern_field
+                  (lower_identifier))
+                (struct_pattern_field
+                  (lower_identifier))))
+            (type_path
+              (upper_identifier)))))
+      (return_type
+        (type_path
+          (upper_identifier)))
+      (block
+        (statement_list
+          (primary_expression
+            (identifier_expression
+              (lower_identifier))))))))
+
+================================================================================
+Multiple attributes on declaration
+================================================================================
+
+@tag("type")
+@rename_all("kebab-case")
+Shape = enum {
+  Circle { radius: F64 },
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (type_declaration
+      (attribute_list
+        (attribute
+          (lower_identifier)
+          (attribute_arguments
+            (primary_expression
+              (string_literal
+                (string_content)))))
+        (attribute
+          (lower_identifier)
+          (attribute_arguments
+            (primary_expression
+              (string_literal
+                (string_content))))))
+      (upper_identifier)
+      (enum_type_definition
+        (enum_type_body
+          (enum_variant
+            (upper_identifier)
+            (struct_variant_payload
+              (struct_field_declaration
+                (lower_identifier)
+                (type_path
+                  (upper_identifier))))))))))
+
+================================================================================
+Attribute on struct field
+================================================================================
+
+Config = struct {
+  @rename("optimization_level")
+  opt_level: U64,
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (type_declaration
+      (upper_identifier)
+      (struct_type_definition
+        (struct_type_body
+          (struct_field_declaration
+            (attribute_list
+              (attribute
+                (lower_identifier)
+                (attribute_arguments
+                  (primary_expression
+                    (string_literal
+                      (string_content))))))
+            (lower_identifier)
+            (type_path
+              (upper_identifier))))))))
+
+================================================================================
+Enum with mixed variant kinds
+================================================================================
+
+Value = enum {
+  Int(I64),
+  Pair { first: String, second: String },
+  None,
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (type_declaration
+      (upper_identifier)
+      (enum_type_definition
+        (enum_type_body
+          (enum_variant
+            (upper_identifier)
+            (tuple_variant_payload
+              (type_path
+                (upper_identifier))))
+          (enum_variant
+            (upper_identifier)
+            (struct_variant_payload
+              (struct_field_declaration
+                (lower_identifier)
+                (type_path
+                  (upper_identifier)))
+              (struct_field_declaration
+                (lower_identifier)
+                (type_path
+                  (upper_identifier)))))
+          (enum_variant
+            (upper_identifier)))))))
+
+================================================================================
+Multiple generic type parameters
+================================================================================
+
+fn zip[A, B](a: Array[A], b: Array[B]) -> Array[(A, B)] {
+  a
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (function_declaration
+      (lower_identifier)
+      (type_parameter_list
+        (type_parameter
+          (upper_identifier))
+        (type_parameter
+          (upper_identifier)))
+      (parameter_clause
+        (parameter_item
+          (parameter
+            (binding_pattern
+              (lower_identifier))
+            (type_path
+              (upper_identifier)
+              (type_arguments
+                (type_path
+                  (upper_identifier))))))
+        (parameter_item
+          (parameter
+            (binding_pattern
+              (lower_identifier))
+            (type_path
+              (upper_identifier)
+              (type_arguments
+                (type_path
+                  (upper_identifier)))))))
+      (return_type
+        (type_path
+          (upper_identifier)
+          (type_arguments
+            (tuple_type
+              (type_path
+                (upper_identifier))
+              (type_path
+                (upper_identifier))))))
+      (block
+        (statement_list
+          (primary_expression
+            (identifier_expression
+              (lower_identifier))))))))
+
+================================================================================
+Return statement
+================================================================================
+
+fn foo() -> U64 {
+  return 42
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (function_declaration
+      (lower_identifier)
+      (parameter_clause)
+      (return_type
+        (type_path
+          (upper_identifier)))
+      (block
+        (statement_list
+          (return_statement
+            (primary_expression
+              (integer_literal))))))))
+
+================================================================================
+Empty return statement
+================================================================================
+
+fn bail() {
+  return
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (function_declaration
+      (lower_identifier)
+      (parameter_clause)
+      (block
+        (statement_list
+          (return_statement))))))

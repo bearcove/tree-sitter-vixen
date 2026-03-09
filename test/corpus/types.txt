@@ -1,0 +1,367 @@
+================================================================================
+Simple type path
+================================================================================
+
+fn id(x: String) -> String {
+  x
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (function_declaration
+      (lower_identifier)
+      (parameter_clause
+        (parameter_item
+          (parameter
+            (binding_pattern
+              (lower_identifier))
+            (type_path
+              (upper_identifier)))))
+      (return_type
+        (type_path
+          (upper_identifier)))
+      (block
+        (statement_list
+          (primary_expression
+            (identifier_expression
+              (lower_identifier))))))))
+
+================================================================================
+Generic type path
+================================================================================
+
+fn first(items: Array[String]) -> String {
+  items[0]
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (function_declaration
+      (lower_identifier)
+      (parameter_clause
+        (parameter_item
+          (parameter
+            (binding_pattern
+              (lower_identifier))
+            (type_path
+              (upper_identifier)
+              (type_arguments
+                (type_path
+                  (upper_identifier)))))))
+      (return_type
+        (type_path
+          (upper_identifier)))
+      (block
+        (statement_list
+          (index_expression
+            (primary_expression
+              (identifier_expression
+                (lower_identifier)))
+            (primary_expression
+              (integer_literal))))))))
+
+================================================================================
+Nested generic type
+================================================================================
+
+fn get(m: Map[String, Array[U64]]) -> U64 {
+  0
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (function_declaration
+      (lower_identifier)
+      (parameter_clause
+        (parameter_item
+          (parameter
+            (binding_pattern
+              (lower_identifier))
+            (type_path
+              (upper_identifier)
+              (type_arguments
+                (type_path
+                  (upper_identifier))
+                (type_path
+                  (upper_identifier)
+                  (type_arguments
+                    (type_path
+                      (upper_identifier)))))))))
+      (return_type
+        (type_path
+          (upper_identifier)))
+      (block
+        (statement_list
+          (primary_expression
+            (integer_literal)))))))
+
+================================================================================
+Function type parameter
+================================================================================
+
+fn apply(f: Fn(U64) -> U64, x: U64) -> U64 {
+  f(x)
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (function_declaration
+      (lower_identifier)
+      (parameter_clause
+        (parameter_item
+          (parameter
+            (binding_pattern
+              (lower_identifier))
+            (function_type
+              (type_path
+                (upper_identifier))
+              (type_path
+                (upper_identifier)))))
+        (parameter_item
+          (parameter
+            (binding_pattern
+              (lower_identifier))
+            (type_path
+              (upper_identifier)))))
+      (return_type
+        (type_path
+          (upper_identifier)))
+      (block
+        (statement_list
+          (call_expression
+            (primary_expression
+              (identifier_expression
+                (lower_identifier)))
+            (argument_list
+              (argument
+                (primary_expression
+                  (identifier_expression
+                    (lower_identifier)))))))))))
+
+================================================================================
+Function type with capability tag
+================================================================================
+
+fn run(f: Fn() #fs -> Tree) -> Tree {
+  f()
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (function_declaration
+      (lower_identifier)
+      (parameter_clause
+        (parameter_item
+          (parameter
+            (binding_pattern
+              (lower_identifier))
+            (function_type
+              (capability_list
+                (capability_tag
+                  (lower_identifier)))
+              (type_path
+                (upper_identifier))))))
+      (return_type
+        (type_path
+          (upper_identifier)))
+      (block
+        (statement_list
+          (call_expression
+            (primary_expression
+              (identifier_expression
+                (lower_identifier)))
+            (argument_list)))))))
+
+================================================================================
+Function type with multiple capability tags
+================================================================================
+
+fn run(f: Fn() #fs #discover -> Tree) -> Tree {
+  f()
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (function_declaration
+      (lower_identifier)
+      (parameter_clause
+        (parameter_item
+          (parameter
+            (binding_pattern
+              (lower_identifier))
+            (function_type
+              (capability_list
+                (capability_tag
+                  (lower_identifier))
+                (capability_tag
+                  (lower_identifier)))
+              (type_path
+                (upper_identifier))))))
+      (return_type
+        (type_path
+          (upper_identifier)))
+      (block
+        (statement_list
+          (call_expression
+            (primary_expression
+              (identifier_expression
+                (lower_identifier)))
+            (argument_list)))))))
+
+================================================================================
+Tuple type
+================================================================================
+
+fn swap(pair: (U64, String)) -> (String, U64) {
+  pair
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (function_declaration
+      (lower_identifier)
+      (parameter_clause
+        (parameter_item
+          (parameter
+            (binding_pattern
+              (lower_identifier))
+            (tuple_type
+              (type_path
+                (upper_identifier))
+              (type_path
+                (upper_identifier))))))
+      (return_type
+        (tuple_type
+          (type_path
+            (upper_identifier))
+          (type_path
+            (upper_identifier))))
+      (block
+        (statement_list
+          (primary_expression
+            (identifier_expression
+              (lower_identifier))))))))
+
+================================================================================
+Option type sugar
+================================================================================
+
+fn find(items: Array[U64]) -> U64 {
+  items[0]
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (function_declaration
+      (lower_identifier)
+      (parameter_clause
+        (parameter_item
+          (parameter
+            (binding_pattern
+              (lower_identifier))
+            (type_path
+              (upper_identifier)
+              (type_arguments
+                (type_path
+                  (upper_identifier)))))))
+      (return_type
+        (type_path
+          (upper_identifier)))
+      (block
+        (statement_list
+          (index_expression
+            (primary_expression
+              (identifier_expression
+                (lower_identifier)))
+            (primary_expression
+              (integer_literal))))))))
+
+================================================================================
+Dotted type path
+================================================================================
+
+fn make(c: Shape.Circle) -> F64 {
+  c
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (function_declaration
+      (lower_identifier)
+      (parameter_clause
+        (parameter_item
+          (parameter
+            (binding_pattern
+              (lower_identifier))
+            (type_path
+              (upper_identifier)
+              (upper_identifier)))))
+      (return_type
+        (type_path
+          (upper_identifier)))
+      (block
+        (statement_list
+          (primary_expression
+            (identifier_expression
+              (lower_identifier))))))))
+
+================================================================================
+Function type with multiple params
+================================================================================
+
+fn combine(f: Fn(U64, U64) -> U64) -> U64 {
+  f(1, 2)
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (function_declaration
+      (lower_identifier)
+      (parameter_clause
+        (parameter_item
+          (parameter
+            (binding_pattern
+              (lower_identifier))
+            (function_type
+              (type_path
+                (upper_identifier))
+              (type_path
+                (upper_identifier))
+              (type_path
+                (upper_identifier))))))
+      (return_type
+        (type_path
+          (upper_identifier)))
+      (block
+        (statement_list
+          (call_expression
+            (primary_expression
+              (identifier_expression
+                (lower_identifier)))
+            (argument_list
+              (argument
+                (primary_expression
+                  (integer_literal)))
+              (argument
+                (primary_expression
+                  (integer_literal))))))))))

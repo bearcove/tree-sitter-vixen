@@ -1,0 +1,242 @@
+================================================================================
+Block closure
+================================================================================
+
+fn(x) { x + 1 }
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (closure_expression
+      (closure_parameter_clause
+        (binding_pattern
+          (lower_identifier)))
+      (block
+        (statement_list
+          (additive_expression
+            (primary_expression
+              (identifier_expression
+                (lower_identifier)))
+            (primary_expression
+              (integer_literal))))))))
+
+================================================================================
+Arrow closure
+================================================================================
+
+(x, y) => x + y
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (arrow_closure
+      (closure_parameter_clause
+        (binding_pattern
+          (lower_identifier))
+        (binding_pattern
+          (lower_identifier)))
+      (additive_expression
+        (primary_expression
+          (identifier_expression
+            (lower_identifier)))
+        (primary_expression
+          (identifier_expression
+            (lower_identifier)))))))
+
+================================================================================
+Arrow closure single parameter
+================================================================================
+
+(x) => x * 2
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (arrow_closure
+      (closure_parameter_clause
+        (binding_pattern
+          (lower_identifier)))
+      (multiplicative_expression
+        (primary_expression
+          (identifier_expression
+            (lower_identifier)))
+        (primary_expression
+          (integer_literal))))))
+
+================================================================================
+Dollar shorthand
+================================================================================
+
+items.map($ + 1)
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (call_expression
+      (field_expression
+        (primary_expression
+          (identifier_expression
+            (lower_identifier)))
+        (lower_identifier))
+      (argument_list
+        (argument
+          (additive_expression
+            (primary_expression
+              (dollar_identifier))
+            (primary_expression
+              (integer_literal))))))))
+
+================================================================================
+Dollar with method call
+================================================================================
+
+items.filter($.len() > 3)
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (call_expression
+      (field_expression
+        (primary_expression
+          (identifier_expression
+            (lower_identifier)))
+        (lower_identifier))
+      (argument_list
+        (argument
+          (comparison_expression
+            (call_expression
+              (field_expression
+                (primary_expression
+                  (dollar_identifier))
+                (lower_identifier))
+              (argument_list))
+            (primary_expression
+              (integer_literal))))))))
+
+================================================================================
+Numbered dollar identifiers
+================================================================================
+
+items.reduce($0 + $1)
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (call_expression
+      (field_expression
+        (primary_expression
+          (identifier_expression
+            (lower_identifier)))
+        (lower_identifier))
+      (argument_list
+        (argument
+          (additive_expression
+            (primary_expression
+              (dollar_identifier))
+            (primary_expression
+              (dollar_identifier))))))))
+
+================================================================================
+Closure as argument
+================================================================================
+
+items.map(fn(x) { x * x })
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (call_expression
+      (field_expression
+        (primary_expression
+          (identifier_expression
+            (lower_identifier)))
+        (lower_identifier))
+      (argument_list
+        (argument
+          (closure_expression
+            (closure_parameter_clause
+              (binding_pattern
+                (lower_identifier)))
+            (block
+              (statement_list
+                (multiplicative_expression
+                  (primary_expression
+                    (identifier_expression
+                      (lower_identifier)))
+                  (primary_expression
+                    (identifier_expression
+                      (lower_identifier))))))))))))
+
+================================================================================
+Block closure with no parameters
+================================================================================
+
+fn() { 42 }
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (closure_expression
+      (closure_parameter_clause)
+      (block
+        (statement_list
+          (primary_expression
+            (integer_literal)))))))
+
+================================================================================
+Partial application
+================================================================================
+
+add_two = @add(2, ..)
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (binding_statement
+      (binding_pattern
+        (lower_identifier))
+      (partial_application_expression
+        (primary_expression
+          (identifier_expression
+            (lower_identifier)))
+        (argument_list
+          (argument
+            (primary_expression
+              (integer_literal)))
+          (argument
+            (argument_placeholder)))))))
+
+================================================================================
+Partial application with keyword args
+================================================================================
+
+loud_compile = @compile(.., loudly: true)
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (binding_statement
+      (binding_pattern
+        (lower_identifier))
+      (partial_application_expression
+        (primary_expression
+          (identifier_expression
+            (lower_identifier)))
+        (argument_list
+          (argument
+            (argument_placeholder))
+          (argument
+            (keyword_argument
+              (lower_identifier)
+              (primary_expression
+                (boolean_literal)))))))))
