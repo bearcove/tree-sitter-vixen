@@ -1,0 +1,202 @@
+================================================================================
+Keyword parameters and arguments
+================================================================================
+
+fn compile(
+  src: String,
+  ; optimize: Bool = false,
+  loudly: Bool = false,
+) -> String {
+  src
+}
+
+fn demo(src: String, tasks: Array[Task]) -> String {
+  compile(src; optimize: true, loudly: true);
+  compile(; optimize: true);
+  tasks.map((task) => task.name);
+  @compile(..; loudly: true);
+  @compile(src; optimize: true)
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (function_declaration
+    (lower_identifier)
+    (parameter_clause
+      (parameter_list
+        (parameter
+          (binding_pattern
+            (lower_identifier))
+          (slot_type
+            (type_primary
+              (type_path
+                (upper_identifier))))))
+      (keyword_parameter_section
+        (keyword_parameter
+          (lower_identifier)
+          (slot_type
+            (type_primary
+              (type_path
+                (upper_identifier))))
+          (primary_expression
+            (boolean_literal)))
+        (keyword_parameter
+          (lower_identifier)
+          (slot_type
+            (type_primary
+              (type_path
+                (upper_identifier))))
+          (primary_expression
+            (boolean_literal)))))
+    (return_type
+      (type_primary
+        (type_path
+          (upper_identifier))))
+    (block
+      (statement_list
+        (primary_expression
+          (identifier_expression
+            (lower_identifier))))))
+  (function_declaration
+    (lower_identifier)
+    (parameter_clause
+      (parameter_list
+        (parameter
+          (binding_pattern
+            (lower_identifier))
+          (slot_type
+            (type_primary
+              (type_path
+                (upper_identifier)))))
+        (parameter
+          (binding_pattern
+            (lower_identifier))
+          (slot_type
+            (type_primary
+              (type_path
+                (upper_identifier)
+                (type_arguments
+                  (type_primary
+                    (type_path
+                      (upper_identifier))))))))))
+    (return_type
+      (type_primary
+        (type_path
+          (upper_identifier))))
+    (block
+      (statement_list
+        (call_expression
+          (primary_expression
+            (identifier_expression
+              (lower_identifier)))
+          (argument_list
+            (argument_list_items
+              (argument
+                (primary_expression
+                  (identifier_expression
+                    (lower_identifier)))))
+            (keyword_argument_section
+              (keyword_argument
+                (lower_identifier)
+                (primary_expression
+                  (boolean_literal)))
+              (keyword_argument
+                (lower_identifier)
+                (primary_expression
+                  (boolean_literal))))))
+        (call_expression
+          (primary_expression
+            (identifier_expression
+              (lower_identifier)))
+          (argument_list
+            (keyword_argument_section
+              (keyword_argument
+                (lower_identifier)
+                (primary_expression
+                  (boolean_literal))))))
+        (call_expression
+          (field_expression
+            (primary_expression
+              (identifier_expression
+                (lower_identifier)))
+            (lower_identifier))
+          (argument_list
+            (argument_list_items
+              (argument
+                (arrow_closure
+                  (closure_parameter_clause
+                    (binding_pattern
+                      (lower_identifier)))
+                  (field_expression
+                    (primary_expression
+                      (identifier_expression
+                        (lower_identifier)))
+                    (lower_identifier)))))))
+        (partial_application_expression
+          (primary_expression
+            (identifier_expression
+              (lower_identifier)))
+          (argument_list
+            (argument_list_items
+              (argument
+                (argument_placeholder)))
+            (keyword_argument_section
+              (keyword_argument
+                (lower_identifier)
+                (primary_expression
+                  (boolean_literal))))))
+        (partial_application_expression
+          (primary_expression
+            (identifier_expression
+              (lower_identifier)))
+          (argument_list
+            (argument_list_items
+              (argument
+                (primary_expression
+                  (identifier_expression
+                    (lower_identifier)))))
+            (keyword_argument_section
+              (keyword_argument
+                (lower_identifier)
+                (primary_expression
+                  (boolean_literal))))))))))
+
+================================================================================
+Keyword-only parameter list
+================================================================================
+
+fn connect(; host: String, port: U64 = 80) -> String {
+  host
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (function_declaration
+    (lower_identifier)
+    (parameter_clause
+      (keyword_parameter_section
+        (keyword_parameter
+          (lower_identifier)
+          (slot_type
+            (type_primary
+              (type_path
+                (upper_identifier)))))
+        (keyword_parameter
+          (lower_identifier)
+          (slot_type
+            (type_primary
+              (type_path
+                (upper_identifier))))
+          (primary_expression
+            (integer_literal)))))
+    (return_type
+      (type_primary
+        (type_path
+          (upper_identifier))))
+    (block
+      (statement_list
+        (primary_expression
+          (identifier_expression
+            (lower_identifier)))))))
