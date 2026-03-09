@@ -2925,6 +2925,11 @@
     "named": false
   },
   {
+    "type": "doc_comment",
+    "named": true,
+    "extra": true
+  },
+  {
     "type": "dollar_identifier",
     "named": true
   },

@@ -19,7 +19,7 @@ module.exports = grammar({
 
   word: ($) => $.lower_identifier,
 
-  extras: ($) => [/\s/, $.line_comment, $.block_comment],
+  extras: ($) => [/\s/, $.doc_comment, $.line_comment, $.block_comment],
 
   supertypes: ($) => [
     $.expression,
@@ -74,6 +74,8 @@ module.exports = grammar({
         $.return_statement,
         $.expression,
       ),
+
+    doc_comment: ($) => token(seq("///", /[^\n]*/)),
 
     line_comment: ($) => token(seq("//", /[^\n]*/)),
 
