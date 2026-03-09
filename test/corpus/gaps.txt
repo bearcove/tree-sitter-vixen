@@ -103,9 +103,10 @@ Shape = enum {
               (attribute
                 (lower_identifier)
                 (attribute_arguments
-                  (primary_expression
-                    (string_literal
-                      (string_content))))))
+                  (attribute_argument
+                    (primary_expression
+                      (string_literal
+                        (string_content)))))))
             (upper_identifier)
             (struct_variant_payload
               (struct_field_declaration
@@ -133,12 +134,14 @@ Shape = enum {
         (attribute
           (lower_identifier)
           (attribute_arguments
-            (primary_expression
-              (string_literal
-                (string_content)))
-            (primary_expression
-              (string_literal
-                (string_content))))))
+            (attribute_argument
+              (primary_expression
+                (string_literal
+                  (string_content))))
+            (attribute_argument
+              (primary_expression
+                (string_literal
+                  (string_content)))))))
       (upper_identifier)
       (enum_type_definition
         (enum_type_body

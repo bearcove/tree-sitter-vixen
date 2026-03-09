@@ -27,9 +27,10 @@ fn first[T](items: Array[T]) -> T {
         (attribute
           (lower_identifier)
           (attribute_arguments
-            (primary_expression
-              (string_literal
-                (string_content))))))
+            (attribute_argument
+              (primary_expression
+                (string_literal
+                  (string_content)))))))
       (upper_identifier)
       (enum_type_definition
         (enum_type_body

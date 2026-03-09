@@ -186,6 +186,10 @@
         "named": true
       },
       {
+        "type": "optional_type",
+        "named": true
+      },
+      {
         "type": "parenthesized_type",
         "named": true
       },
@@ -423,6 +427,25 @@
     }
   },
   {
+    "type": "attribute_argument",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "keyword_attribute_argument",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "attribute_arguments",
     "named": true,
     "fields": {},
@@ -431,7 +454,7 @@
       "required": false,
       "types": [
         {
-          "type": "expression",
+          "type": "attribute_argument",
           "named": true
         }
       ]
@@ -1007,12 +1030,26 @@
           }
         ]
       },
+      "capabilities": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "capability_list",
+            "named": true
+          }
+        ]
+      },
       "name": {
         "multiple": false,
         "required": true,
         "types": [
           {
             "type": "lower_identifier",
+            "named": true
+          },
+          {
+            "type": "upper_identifier",
             "named": true
           }
         ]
@@ -1209,6 +1246,32 @@
   },
   {
     "type": "keyword_argument",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "lower_identifier",
+            "named": true
+          }
+        ]
+      },
+      "value": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "expression",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "keyword_attribute_argument",
     "named": true,
     "fields": {
       "name": {
@@ -1469,6 +1532,21 @@
       "types": [
         {
           "type": "type_expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "optional_type",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "type_path",
           "named": true
         }
       ]

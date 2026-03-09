@@ -42,6 +42,7 @@ module.exports = grammar({
     [$.struct_pattern, $.struct_literal_body],
     [$.binding_pattern, $.struct_pattern_field],
     [$.pattern, $.identifier_expression],
+    [$.type_expression, $.optional_type],
   ],
 
   rules: {
@@ -86,15 +87,25 @@ module.exports = grammar({
       ),
 
     attribute_arguments: ($) =>
-      seq("(", optional(commaSep1($.expression)), optional(","), ")"),
+      seq("(", optional(commaSep1($.attribute_argument)), optional(","), ")"),
+
+    attribute_argument: ($) =>
+      choice(
+        $.keyword_attribute_argument,
+        $.expression,
+      ),
+
+    keyword_attribute_argument: ($) =>
+      seq(field("name", $.lower_identifier), ":", field("value", $.expression)),
 
     function_declaration: ($) =>
       seq(
         optional(field("attributes", $.attribute_list)),
         "fn",
-        field("name", $.lower_identifier),
+        field("name", choice($.lower_identifier, $.upper_identifier)),
         optional(field("type_parameters", $.type_parameter_list)),
         field("parameters", $.parameter_clause),
+        optional(field("capabilities", $.capability_list)),
         optional(field("return_type", $.return_type)),
         optional(field("body", $.block)),
       ),
@@ -226,8 +237,11 @@ module.exports = grammar({
         $.function_type,
         $.tuple_type,
         $.parenthesized_type,
+        $.optional_type,
         $.type_path,
       ),
+
+    optional_type: ($) => seq($.type_path, "?"),
 
     parenthesized_type: ($) => seq("(", $.type_expression, ")"),
 

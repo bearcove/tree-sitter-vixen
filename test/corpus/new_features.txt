@@ -1,0 +1,323 @@
+================================================================================
+Optional type sugar T?
+================================================================================
+
+fn find(items: Array[String]) -> String? {
+  items[0]
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (function_declaration
+      (lower_identifier)
+      (parameter_clause
+        (parameter_item
+          (parameter
+            (binding_pattern
+              (lower_identifier))
+            (type_path
+              (upper_identifier)
+              (type_arguments
+                (type_path
+                  (upper_identifier)))))))
+      (return_type
+        (optional_type
+          (type_path
+            (upper_identifier))))
+      (block
+        (statement_list
+          (index_expression
+            (primary_expression
+              (identifier_expression
+                (lower_identifier)))
+            (primary_expression
+              (integer_literal))))))))
+
+================================================================================
+Optional type sugar on generic
+================================================================================
+
+fn get(key: String) -> Map[String, U64]? {
+  key
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (function_declaration
+      (lower_identifier)
+      (parameter_clause
+        (parameter_item
+          (parameter
+            (binding_pattern
+              (lower_identifier))
+            (type_path
+              (upper_identifier)))))
+      (return_type
+        (optional_type
+          (type_path
+            (upper_identifier)
+            (type_arguments
+              (type_path
+                (upper_identifier))
+              (type_path
+                (upper_identifier))))))
+      (block
+        (statement_list
+          (primary_expression
+            (identifier_expression
+              (lower_identifier))))))))
+
+================================================================================
+Optional type in parameter position
+================================================================================
+
+fn handle(value: String?) -> String {
+  value
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (function_declaration
+      (lower_identifier)
+      (parameter_clause
+        (parameter_item
+          (parameter
+            (binding_pattern
+              (lower_identifier))
+            (optional_type
+              (type_path
+                (upper_identifier))))))
+      (return_type
+        (type_path
+          (upper_identifier)))
+      (block
+        (statement_list
+          (primary_expression
+            (identifier_expression
+              (lower_identifier))))))))
+
+================================================================================
+Constructor function with UpperCamelCase name
+================================================================================
+
+fn Blob(s: String) -> Blob {
+  Blob { content: s }
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (function_declaration
+      (upper_identifier)
+      (parameter_clause
+        (parameter_item
+          (parameter
+            (binding_pattern
+              (lower_identifier))
+            (type_path
+              (upper_identifier)))))
+      (return_type
+        (type_path
+          (upper_identifier)))
+      (block
+        (statement_list
+          (struct_literal_expression
+            (type_path
+              (upper_identifier))
+            (struct_literal_body
+              (struct_literal_field
+                (lower_identifier)
+                (primary_expression
+                  (identifier_expression
+                    (lower_identifier)))))))))))
+
+================================================================================
+Constructor function overload
+================================================================================
+
+fn Point(x: F64, y: F64) -> Point {
+  Point { x: x, y: y }
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (function_declaration
+      (upper_identifier)
+      (parameter_clause
+        (parameter_item
+          (parameter
+            (binding_pattern
+              (lower_identifier))
+            (type_path
+              (upper_identifier))))
+        (parameter_item
+          (parameter
+            (binding_pattern
+              (lower_identifier))
+            (type_path
+              (upper_identifier)))))
+      (return_type
+        (type_path
+          (upper_identifier)))
+      (block
+        (statement_list
+          (struct_literal_expression
+            (type_path
+              (upper_identifier))
+            (struct_literal_body
+              (struct_literal_field
+                (lower_identifier)
+                (primary_expression
+                  (identifier_expression
+                    (lower_identifier))))
+              (struct_literal_field
+                (lower_identifier)
+                (primary_expression
+                  (identifier_expression
+                    (lower_identifier)))))))))))
+
+================================================================================
+Function with capability tag
+================================================================================
+
+fn read_file(path: String) #fs -> String {
+  path
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (function_declaration
+      (lower_identifier)
+      (parameter_clause
+        (parameter_item
+          (parameter
+            (binding_pattern
+              (lower_identifier))
+            (type_path
+              (upper_identifier)))))
+      (capability_list
+        (capability_tag
+          (lower_identifier)))
+      (return_type
+        (type_path
+          (upper_identifier)))
+      (block
+        (statement_list
+          (primary_expression
+            (identifier_expression
+              (lower_identifier))))))))
+
+================================================================================
+Function with multiple capability tags
+================================================================================
+
+fn resolve(name: String) #fs #discover -> Path {
+  name
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (function_declaration
+      (lower_identifier)
+      (parameter_clause
+        (parameter_item
+          (parameter
+            (binding_pattern
+              (lower_identifier))
+            (type_path
+              (upper_identifier)))))
+      (capability_list
+        (capability_tag
+          (lower_identifier))
+        (capability_tag
+          (lower_identifier)))
+      (return_type
+        (type_path
+          (upper_identifier)))
+      (block
+        (statement_list
+          (primary_expression
+            (identifier_expression
+              (lower_identifier))))))))
+
+================================================================================
+Keyword attribute argument
+================================================================================
+
+@tag("type", content: "data")
+Shape = enum {
+  Circle,
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (type_declaration
+      (attribute_list
+        (attribute
+          (lower_identifier)
+          (attribute_arguments
+            (attribute_argument
+              (primary_expression
+                (string_literal
+                  (string_content))))
+            (attribute_argument
+              (keyword_attribute_argument
+                (lower_identifier)
+                (primary_expression
+                  (string_literal
+                    (string_content))))))))
+      (upper_identifier)
+      (enum_type_definition
+        (enum_type_body
+          (enum_variant
+            (upper_identifier)))))))
+
+================================================================================
+Multiple keyword attribute arguments
+================================================================================
+
+@config(debug: true, level: 3)
+fn run() {
+  0
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (function_declaration
+      (attribute_list
+        (attribute
+          (lower_identifier)
+          (attribute_arguments
+            (attribute_argument
+              (keyword_attribute_argument
+                (lower_identifier)
+                (primary_expression
+                  (boolean_literal))))
+            (attribute_argument
+              (keyword_attribute_argument
+                (lower_identifier)
+                (primary_expression
+                  (integer_literal)))))))
+      (lower_identifier)
+      (parameter_clause)
+      (block
+        (statement_list
+          (primary_expression
+            (integer_literal)))))))

@@ -345,15 +345,17 @@ Shape = enum {
         (attribute
           (lower_identifier)
           (attribute_arguments
-            (primary_expression
-              (string_literal
-                (string_content)))))
+            (attribute_argument
+              (primary_expression
+                (string_literal
+                  (string_content))))))
         (attribute
           (lower_identifier)
           (attribute_arguments
-            (primary_expression
-              (string_literal
-                (string_content))))))
+            (attribute_argument
+              (primary_expression
+                (string_literal
+                  (string_content)))))))
       (upper_identifier)
       (enum_type_definition
         (enum_type_body
@@ -387,9 +389,10 @@ Config = struct {
               (attribute
                 (lower_identifier)
                 (attribute_arguments
-                  (primary_expression
-                    (string_literal
-                      (string_content))))))
+                  (attribute_argument
+                    (primary_expression
+                      (string_literal
+                        (string_content)))))))
             (lower_identifier)
             (type_path
               (upper_identifier))))))))
