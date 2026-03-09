@@ -1,0 +1,759 @@
+================================================================================
+Empty document
+================================================================================
+
+
+
+--------------------------------------------------------------------------------
+
+(document)
+
+================================================================================
+Attribute without arguments
+================================================================================
+
+@untagged
+Shape = enum {
+  Circle { radius: F64 },
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (type_declaration
+      (attribute_list
+        (attribute
+          (lower_identifier)))
+      (upper_identifier)
+      (enum_type_definition
+        (enum_type_body
+          (enum_variant
+            (upper_identifier)
+            (struct_variant_payload
+              (struct_field_declaration
+                (lower_identifier)
+                (type_path
+                  (upper_identifier))))))))))
+
+================================================================================
+Attribute on function declaration
+================================================================================
+
+@inline
+fn add(a: U64, b: U64) -> U64 {
+  a + b
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (function_declaration
+      (attribute_list
+        (attribute
+          (lower_identifier)))
+      (lower_identifier)
+      (parameter_clause
+        (parameter_item
+          (parameter
+            (binding_pattern
+              (lower_identifier))
+            (type_path
+              (upper_identifier))))
+        (parameter_item
+          (parameter
+            (binding_pattern
+              (lower_identifier))
+            (type_path
+              (upper_identifier)))))
+      (return_type
+        (type_path
+          (upper_identifier)))
+      (block
+        (statement_list
+          (additive_expression
+            (primary_expression
+              (identifier_expression
+                (lower_identifier)))
+            (primary_expression
+              (identifier_expression
+                (lower_identifier)))))))))
+
+================================================================================
+Attribute on enum variant
+================================================================================
+
+Shape = enum {
+  @rename("circle")
+  Circle { radius: F64 },
+  Empty,
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (type_declaration
+      (upper_identifier)
+      (enum_type_definition
+        (enum_type_body
+          (enum_variant
+            (attribute_list
+              (attribute
+                (lower_identifier)
+                (attribute_arguments
+                  (primary_expression
+                    (string_literal
+                      (string_content))))))
+            (upper_identifier)
+            (struct_variant_payload
+              (struct_field_declaration
+                (lower_identifier)
+                (type_path
+                  (upper_identifier)))))
+          (enum_variant
+            (upper_identifier)))))))
+
+================================================================================
+Attribute with multiple arguments
+================================================================================
+
+@tag("type", "variant")
+Shape = enum {
+  Circle { radius: F64 },
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (type_declaration
+      (attribute_list
+        (attribute
+          (lower_identifier)
+          (attribute_arguments
+            (primary_expression
+              (string_literal
+                (string_content)))
+            (primary_expression
+              (string_literal
+                (string_content))))))
+      (upper_identifier)
+      (enum_type_definition
+        (enum_type_body
+          (enum_variant
+            (upper_identifier)
+            (struct_variant_payload
+              (struct_field_declaration
+                (lower_identifier)
+                (type_path
+                  (upper_identifier))))))))))
+
+================================================================================
+Tuple variant with multiple types
+================================================================================
+
+Result = enum {
+  Ok(String, U64),
+  Err(String),
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (type_declaration
+      (upper_identifier)
+      (enum_type_definition
+        (enum_type_body
+          (enum_variant
+            (upper_identifier)
+            (tuple_variant_payload
+              (type_path
+                (upper_identifier))
+              (type_path
+                (upper_identifier))))
+          (enum_variant
+            (upper_identifier)
+            (tuple_variant_payload
+              (type_path
+                (upper_identifier)))))))))
+
+================================================================================
+Sum type with three alternatives
+================================================================================
+
+Content = Blob | Tree | Path
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (type_declaration
+      (upper_identifier)
+      (sum_type_definition
+        (type_path
+          (upper_identifier))
+        (type_path
+          (upper_identifier))
+        (type_path
+          (upper_identifier))))))
+
+================================================================================
+Multiple keyword parameters
+================================================================================
+
+fn render(template: String, { width: U64 = 800, height: U64 = 600, title: String = "untitled" }) {
+  template
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (function_declaration
+      (lower_identifier)
+      (parameter_clause
+        (parameter_item
+          (parameter
+            (binding_pattern
+              (lower_identifier))
+            (type_path
+              (upper_identifier))))
+        (parameter_item
+          (keyword_parameter_group
+            (keyword_parameter
+              (lower_identifier)
+              (type_path
+                (upper_identifier))
+              (primary_expression
+                (integer_literal)))
+            (keyword_parameter
+              (lower_identifier)
+              (type_path
+                (upper_identifier))
+              (primary_expression
+                (integer_literal)))
+            (keyword_parameter
+              (lower_identifier)
+              (type_path
+                (upper_identifier))
+              (primary_expression
+                (string_literal
+                  (string_content)))))))
+      (block
+        (statement_list
+          (primary_expression
+            (identifier_expression
+              (lower_identifier))))))))
+
+================================================================================
+Update body with spread
+================================================================================
+
+updated = config with {
+  ..defaults,
+  name: "new",
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (binding_statement
+      (binding_pattern
+        (lower_identifier))
+      (with_expression
+        (primary_expression
+          (identifier_expression
+            (lower_identifier)))
+        (update_body
+          (update_field
+            (primary_expression
+              (identifier_expression
+                (lower_identifier))))
+          (update_field
+            (field_path
+              (lower_identifier))
+            (primary_expression
+              (string_literal
+                (string_content)))))))))
+
+================================================================================
+Empty struct literal
+================================================================================
+
+e = Empty {}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (binding_statement
+      (binding_pattern
+        (lower_identifier))
+      (struct_literal_expression
+        (type_path
+          (upper_identifier))
+        (struct_literal_body)))))
+
+================================================================================
+Fail with non-string expression
+================================================================================
+
+fail error_value
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (primary_expression
+      (fail_expression
+        (primary_expression
+          (identifier_expression
+            (lower_identifier)))))))
+
+================================================================================
+Map with computed keys
+================================================================================
+
+m = %{ f(x) => 1, g(y) => 2 }
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (binding_statement
+      (binding_pattern
+        (lower_identifier))
+      (primary_expression
+        (map_expression
+          (map_entry
+            (call_expression
+              (primary_expression
+                (identifier_expression
+                  (lower_identifier)))
+              (argument_list
+                (argument
+                  (primary_expression
+                    (identifier_expression
+                      (lower_identifier))))))
+            (primary_expression
+              (integer_literal)))
+          (map_entry
+            (call_expression
+              (primary_expression
+                (identifier_expression
+                  (lower_identifier)))
+              (argument_list
+                (argument
+                  (primary_expression
+                    (identifier_expression
+                      (lower_identifier))))))
+            (primary_expression
+              (integer_literal))))))))
+
+================================================================================
+Tuple with spread
+================================================================================
+
+t = (1, ..middle, 4)
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (binding_statement
+      (binding_pattern
+        (lower_identifier))
+      (primary_expression
+        (tuple_expression
+          (primary_expression
+            (integer_literal))
+          (spread_expression
+            (primary_expression
+              (identifier_expression
+                (lower_identifier))))
+          (primary_expression
+            (integer_literal)))))))
+
+================================================================================
+Float literal pattern
+================================================================================
+
+match x {
+  3.14 => "pi",
+  0.0 => "zero",
+  _ => "other",
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (match_expression
+      (primary_expression
+        (identifier_expression
+          (lower_identifier)))
+      (match_arm
+        (literal_pattern
+          (float_literal))
+        (primary_expression
+          (string_literal
+            (string_content))))
+      (match_arm
+        (literal_pattern
+          (float_literal))
+        (primary_expression
+          (string_literal
+            (string_content))))
+      (match_arm
+        (wildcard_pattern)
+        (primary_expression
+          (string_literal
+            (string_content)))))))
+
+================================================================================
+Range in index expression
+================================================================================
+
+items[0..3]
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (index_expression
+      (primary_expression
+        (identifier_expression
+          (lower_identifier)))
+      (range_expression
+        (primary_expression
+          (integer_literal))
+        (primary_expression
+          (integer_literal))))))
+
+================================================================================
+Inclusive range to
+================================================================================
+
+..=10
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (range_expression
+      (primary_expression
+        (integer_literal)))))
+
+================================================================================
+Declaration inside block
+================================================================================
+
+result = {
+  fn helper(x: U64) -> U64 { x + 1 };
+  helper(5)
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (binding_statement
+      (binding_pattern
+        (lower_identifier))
+      (primary_expression
+        (block
+          (statement_list
+            (function_declaration
+              (lower_identifier)
+              (parameter_clause
+                (parameter_item
+                  (parameter
+                    (binding_pattern
+                      (lower_identifier))
+                    (type_path
+                      (upper_identifier)))))
+              (return_type
+                (type_path
+                  (upper_identifier)))
+              (block
+                (statement_list
+                  (additive_expression
+                    (primary_expression
+                      (identifier_expression
+                        (lower_identifier)))
+                    (primary_expression
+                      (integer_literal))))))
+            (call_expression
+              (primary_expression
+                (identifier_expression
+                  (lower_identifier)))
+              (argument_list
+                (argument
+                  (primary_expression
+                    (integer_literal)))))))))))
+
+================================================================================
+Type declaration inside block
+================================================================================
+
+result = {
+  Wrapper = struct { value: U64 };
+  w = Wrapper { value: 42 };
+  w
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (binding_statement
+      (binding_pattern
+        (lower_identifier))
+      (primary_expression
+        (block
+          (statement_list
+            (type_declaration
+              (upper_identifier)
+              (struct_type_definition
+                (struct_type_body
+                  (struct_field_declaration
+                    (lower_identifier)
+                    (type_path
+                      (upper_identifier))))))
+            (binding_statement
+              (binding_pattern
+                (lower_identifier))
+              (struct_literal_expression
+                (type_path
+                  (upper_identifier))
+                (struct_literal_body
+                  (struct_literal_field
+                    (lower_identifier)
+                    (primary_expression
+                      (integer_literal))))))
+            (primary_expression
+              (identifier_expression
+                (lower_identifier)))))))))
+
+================================================================================
+Parenthesized pattern
+================================================================================
+
+match x {
+  (0) => "zero",
+  _ => "other",
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (match_expression
+      (primary_expression
+        (identifier_expression
+          (lower_identifier)))
+      (match_arm
+        (parenthesized_pattern
+          (literal_pattern
+            (integer_literal)))
+        (primary_expression
+          (string_literal
+            (string_content))))
+      (match_arm
+        (wildcard_pattern)
+        (primary_expression
+          (string_literal
+            (string_content)))))))
+
+================================================================================
+Float starting with zero
+================================================================================
+
+0.5
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (primary_expression
+      (float_literal))))
+
+================================================================================
+Dotted type path with type arguments
+================================================================================
+
+fn make(c: Shape.Circle[F64]) -> F64 {
+  c
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (function_declaration
+      (lower_identifier)
+      (parameter_clause
+        (parameter_item
+          (parameter
+            (binding_pattern
+              (lower_identifier))
+            (type_path
+              (upper_identifier)
+              (upper_identifier)
+              (type_arguments
+                (type_path
+                  (upper_identifier)))))))
+      (return_type
+        (type_path
+          (upper_identifier)))
+      (block
+        (statement_list
+          (primary_expression
+            (identifier_expression
+              (lower_identifier))))))))
+
+================================================================================
+Closure with destructuring parameter
+================================================================================
+
+fn((a, b)) { a + b }
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (closure_expression
+      (closure_parameter_clause
+        (binding_pattern
+          (tuple_pattern
+            (lower_identifier)
+            (lower_identifier))))
+      (block
+        (statement_list
+          (additive_expression
+            (primary_expression
+              (identifier_expression
+                (lower_identifier)))
+            (primary_expression
+              (identifier_expression
+                (lower_identifier)))))))))
+
+================================================================================
+Interpolated string with bare dollar
+================================================================================
+
+`costs $5`
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (primary_expression
+      (interpolated_string
+        (string_content)
+        (string_content)
+        (string_content)))))
+
+================================================================================
+Deeply nested pattern
+================================================================================
+
+match data {
+  Wrapper { items: [first, ..] } => first,
+  _ => "none",
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (match_expression
+      (primary_expression
+        (identifier_expression
+          (lower_identifier)))
+      (match_arm
+        (variant_pattern
+          (type_path
+            (upper_identifier))
+          (struct_pattern
+            (struct_pattern_field
+              (lower_identifier)
+              (array_pattern
+                (array_pattern_item
+                  (lower_identifier))
+                (array_pattern_item
+                  (array_rest_pattern))))))
+        (primary_expression
+          (identifier_expression
+            (lower_identifier))))
+      (match_arm
+        (wildcard_pattern)
+        (primary_expression
+          (string_literal
+            (string_content)))))))
+
+================================================================================
+Chained field access on upper identifier
+================================================================================
+
+std.rust.workspace(src, args, env)
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (call_expression
+      (field_expression
+        (field_expression
+          (primary_expression
+            (identifier_expression
+              (lower_identifier)))
+          (lower_identifier))
+        (lower_identifier))
+      (argument_list
+        (argument
+          (primary_expression
+            (identifier_expression
+              (lower_identifier))))
+        (argument
+          (primary_expression
+            (identifier_expression
+              (lower_identifier))))
+        (argument
+          (primary_expression
+            (identifier_expression
+              (lower_identifier))))))))
+
+================================================================================
+Enum constructor syntax
+================================================================================
+
+s = Shape(Circle { radius: 5.0 })
+
+--------------------------------------------------------------------------------
+
+(document
+  (statement_list
+    (binding_statement
+      (binding_pattern
+        (lower_identifier))
+      (call_expression
+        (primary_expression
+          (identifier_expression
+            (upper_identifier)))
+        (argument_list
+          (argument
+            (struct_literal_expression
+              (type_path
+                (upper_identifier))
+              (struct_literal_body
+                (struct_literal_field
+                  (lower_identifier)
+                  (primary_expression
+                    (float_literal)))))))))))
+
+
