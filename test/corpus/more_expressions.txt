@@ -209,7 +209,7 @@ result = (1 + 2)
       (binding_pattern
         (lower_identifier))
       (primary_expression
-        (parenthesized_expression
+        (tuple_expression
           (additive_expression
             (primary_expression
               (integer_literal))
@@ -299,10 +299,11 @@ fail "something went wrong"
 
 (document
   (statement_list
-    (fail_expression
-      (primary_expression
-        (string_literal
-          (string_content))))))
+    (primary_expression
+      (fail_expression
+        (primary_expression
+          (string_literal
+            (string_content)))))))
 
 ================================================================================
 Field access

@@ -247,7 +247,8 @@ match config {
           (struct_pattern_field
             (lower_identifier)
             (literal_pattern
-              (boolean_literal))))
+              (boolean_literal)))
+          (struct_pattern_field))
         (primary_expression
           (string_literal
             (string_content))))
@@ -350,7 +351,8 @@ match token {
           (lower_identifier)))
       (match_arm
         (variant_pattern
-          (upper_identifier)
+          (type_path
+            (upper_identifier))
           (tuple_pattern
             (lower_identifier)))
         (primary_expression
@@ -381,7 +383,8 @@ match shape {
           (lower_identifier)))
       (match_arm
         (variant_pattern
-          (upper_identifier)
+          (type_path
+            (upper_identifier))
           (struct_pattern
             (struct_pattern_field
               (lower_identifier))))
@@ -390,7 +393,8 @@ match shape {
             (lower_identifier))))
       (match_arm
         (variant_pattern
-          (upper_identifier)
+          (type_path
+            (upper_identifier))
           (struct_pattern
             (struct_pattern_field
               (lower_identifier))
@@ -567,7 +571,8 @@ match value {
           (lower_identifier)))
       (match_arm
         (variant_pattern
-          (upper_identifier)
+          (type_path
+            (upper_identifier))
           (tuple_pattern
             (lower_identifier)))
         (primary_expression
@@ -610,7 +615,8 @@ match result {
           (lower_identifier)))
       (match_arm
         (variant_pattern
-          (upper_identifier)
+          (type_path
+            (upper_identifier))
           (tuple_pattern
             (lower_identifier)))
         (primary_expression

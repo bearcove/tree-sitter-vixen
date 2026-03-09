@@ -159,7 +159,8 @@ if value is { x: 0, .. } {
           (struct_pattern_field
             (lower_identifier)
             (literal_pattern
-              (integer_literal)))))
+              (integer_literal)))
+          (struct_pattern_field)))
       (block
         (statement_list
           (primary_expression
