@@ -3437,7 +3437,7 @@
                   "members": [
                     {
                       "type": "SYMBOL",
-                      "name": "keyword_argument"
+                      "name": "keyword_argument_item"
                     },
                     {
                       "type": "REPEAT",
@@ -3450,7 +3450,7 @@
                           },
                           {
                             "type": "SYMBOL",
-                            "name": "keyword_argument"
+                            "name": "keyword_argument_item"
                           }
                         ]
                       }
@@ -3475,6 +3475,19 @@
               "type": "BLANK"
             }
           ]
+        }
+      ]
+    },
+    "keyword_argument_item": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "keyword_argument"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "spread_expression"
         }
       ]
     },

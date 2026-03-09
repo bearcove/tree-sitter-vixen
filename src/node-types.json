@@ -1430,6 +1430,25 @@
     }
   },
   {
+    "type": "keyword_argument_item",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "keyword_argument",
+          "named": true
+        },
+        {
+          "type": "spread_expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "keyword_argument_section",
     "named": true,
     "fields": {},
@@ -1438,7 +1457,7 @@
       "required": false,
       "types": [
         {
-          "type": "keyword_argument",
+          "type": "keyword_argument_item",
           "named": true
         }
       ]

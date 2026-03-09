@@ -536,7 +536,13 @@ module.exports = grammar({
     argument_list_items: ($) => seq(commaSep1($.argument), optional(",")),
 
     keyword_argument_section: ($) =>
-      seq(";", optional(seq(commaSep1($.keyword_argument), optional(",")))),
+      seq(";", optional(seq(commaSep1($.keyword_argument_item), optional(",")))),
+
+    keyword_argument_item: ($) =>
+      choice(
+        $.keyword_argument,
+        $.spread_expression,
+      ),
 
     argument: ($) =>
       choice(

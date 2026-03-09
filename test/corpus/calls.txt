@@ -97,24 +97,27 @@ fn demo(src: String, tasks: Array[Task]) -> String {
                   (identifier_expression
                     (lower_identifier)))))
             (keyword_argument_section
-              (keyword_argument
-                (lower_identifier)
-                (primary_expression
-                  (boolean_literal)))
-              (keyword_argument
-                (lower_identifier)
-                (primary_expression
-                  (boolean_literal))))))
+              (keyword_argument_item
+                (keyword_argument
+                  (lower_identifier)
+                  (primary_expression
+                    (boolean_literal))))
+              (keyword_argument_item
+                (keyword_argument
+                  (lower_identifier)
+                  (primary_expression
+                    (boolean_literal)))))))
         (call_expression
           (primary_expression
             (identifier_expression
               (lower_identifier)))
           (argument_list
             (keyword_argument_section
-              (keyword_argument
-                (lower_identifier)
-                (primary_expression
-                  (boolean_literal))))))
+              (keyword_argument_item
+                (keyword_argument
+                  (lower_identifier)
+                  (primary_expression
+                    (boolean_literal)))))))
         (call_expression
           (field_expression
             (primary_expression
@@ -142,10 +145,11 @@ fn demo(src: String, tasks: Array[Task]) -> String {
               (argument
                 (argument_placeholder)))
             (keyword_argument_section
-              (keyword_argument
-                (lower_identifier)
-                (primary_expression
-                  (boolean_literal))))))
+              (keyword_argument_item
+                (keyword_argument
+                  (lower_identifier)
+                  (primary_expression
+                    (boolean_literal)))))))
         (partial_application_expression
           (primary_expression
             (identifier_expression
@@ -157,10 +161,11 @@ fn demo(src: String, tasks: Array[Task]) -> String {
                   (identifier_expression
                     (lower_identifier)))))
             (keyword_argument_section
-              (keyword_argument
-                (lower_identifier)
-                (primary_expression
-                  (boolean_literal))))))))))
+              (keyword_argument_item
+                (keyword_argument
+                  (lower_identifier)
+                  (primary_expression
+                    (boolean_literal)))))))))))
 
 ================================================================================
 Keyword-only parameter list

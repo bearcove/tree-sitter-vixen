@@ -1,0 +1,428 @@
+================================================================================
+Struct literal
+================================================================================
+
+fn value() -> Point {
+  Point { x: 1.0, y: 2.0 }
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (function_declaration
+    (lower_identifier)
+    (parameter_clause)
+    (return_type
+      (type_primary
+        (type_path
+          (upper_identifier))))
+    (block
+      (statement_list
+        (struct_literal_expression
+          (type_path
+            (upper_identifier))
+          (struct_literal_body
+            (struct_literal_field
+              (lower_identifier)
+              (primary_expression
+                (float_literal)))
+            (struct_literal_field
+              (lower_identifier)
+              (primary_expression
+                (float_literal)))))))))
+
+================================================================================
+Struct literal shorthand
+================================================================================
+
+fn value(x: F64) -> Point {
+  Point { :x, y: 2.0 }
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (function_declaration
+    (lower_identifier)
+    (parameter_clause
+      (parameter_list
+        (parameter
+          (binding_pattern
+            (lower_identifier))
+          (slot_type
+            (type_primary
+              (type_path
+                (upper_identifier)))))))
+    (return_type
+      (type_primary
+        (type_path
+          (upper_identifier))))
+    (block
+      (statement_list
+        (struct_literal_expression
+          (type_path
+            (upper_identifier))
+          (struct_literal_body
+            (struct_literal_field
+              (lower_identifier))
+            (struct_literal_field
+              (lower_identifier)
+              (primary_expression
+                (float_literal)))))))))
+
+================================================================================
+Struct literal spread
+================================================================================
+
+fn value(p: Point) -> Point {
+  Point { ..p, y: 3.0 }
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (function_declaration
+    (lower_identifier)
+    (parameter_clause
+      (parameter_list
+        (parameter
+          (binding_pattern
+            (lower_identifier))
+          (slot_type
+            (type_primary
+              (type_path
+                (upper_identifier)))))))
+    (return_type
+      (type_primary
+        (type_path
+          (upper_identifier))))
+    (block
+      (statement_list
+        (struct_literal_expression
+          (type_path
+            (upper_identifier))
+          (struct_literal_body
+            (struct_literal_field
+              (primary_expression
+                (identifier_expression
+                  (lower_identifier))))
+            (struct_literal_field
+              (lower_identifier)
+              (primary_expression
+                (float_literal)))))))))
+
+================================================================================
+With expression
+================================================================================
+
+fn value(name: Name) -> Name {
+  name with { last: "Wilson" }
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (function_declaration
+    (lower_identifier)
+    (parameter_clause
+      (parameter_list
+        (parameter
+          (binding_pattern
+            (lower_identifier))
+          (slot_type
+            (type_primary
+              (type_path
+                (upper_identifier)))))))
+    (return_type
+      (type_primary
+        (type_path
+          (upper_identifier))))
+    (block
+      (statement_list
+        (with_expression
+          (primary_expression
+            (identifier_expression
+              (lower_identifier)))
+          (update_body
+            (update_field
+              (field_path
+                (lower_identifier))
+              (primary_expression
+                (string_literal
+                  (string_content))))))))))
+
+================================================================================
+Nested with shorthand
+================================================================================
+
+fn value(config: Config) -> Config {
+  config with {
+    :package with {
+      name: "new",
+    },
+  }
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (function_declaration
+    (lower_identifier)
+    (parameter_clause
+      (parameter_list
+        (parameter
+          (binding_pattern
+            (lower_identifier))
+          (slot_type
+            (type_primary
+              (type_path
+                (upper_identifier)))))))
+    (return_type
+      (type_primary
+        (type_path
+          (upper_identifier))))
+    (block
+      (statement_list
+        (with_expression
+          (primary_expression
+            (identifier_expression
+              (lower_identifier)))
+          (update_body
+            (update_field
+              (field_path
+                (lower_identifier))
+              (update_body
+                (update_field
+                  (field_path
+                    (lower_identifier))
+                  (primary_expression
+                    (string_literal
+                      (string_content))))))))))))
+
+================================================================================
+Import expression
+================================================================================
+
+fn value() -> Module {
+  import("build.vx")
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (function_declaration
+    (lower_identifier)
+    (parameter_clause)
+    (return_type
+      (type_primary
+        (type_path
+          (upper_identifier))))
+    (block
+      (statement_list
+        (primary_expression
+          (import_expression
+            (string_literal
+              (string_content))))))))
+
+================================================================================
+Fail expression
+================================================================================
+
+fn value(msg: String) -> String {
+  fail msg
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (function_declaration
+    (lower_identifier)
+    (parameter_clause
+      (parameter_list
+        (parameter
+          (binding_pattern
+            (lower_identifier))
+          (slot_type
+            (type_primary
+              (type_path
+                (upper_identifier)))))))
+    (return_type
+      (type_primary
+        (type_path
+          (upper_identifier))))
+    (block
+      (statement_list
+        (primary_expression
+          (fail_expression
+            (primary_expression
+              (identifier_expression
+                (lower_identifier)))))))))
+
+================================================================================
+Block expression
+================================================================================
+
+fn value(rect: Rect) -> U64 {
+  {
+    let w = rect.width;
+    let h = rect.height;
+    w * h
+  }
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (function_declaration
+    (lower_identifier)
+    (parameter_clause
+      (parameter_list
+        (parameter
+          (binding_pattern
+            (lower_identifier))
+          (slot_type
+            (type_primary
+              (type_path
+                (upper_identifier)))))))
+    (return_type
+      (type_primary
+        (type_path
+          (upper_identifier))))
+    (block
+      (statement_list
+        (primary_expression
+          (block
+            (statement_list
+              (binding_statement
+                (binding_pattern
+                  (lower_identifier))
+                (field_expression
+                  (primary_expression
+                    (identifier_expression
+                      (lower_identifier)))
+                  (lower_identifier)))
+              (binding_statement
+                (binding_pattern
+                  (lower_identifier))
+                (field_expression
+                  (primary_expression
+                    (identifier_expression
+                      (lower_identifier)))
+                  (lower_identifier)))
+              (multiplicative_expression
+                (primary_expression
+                  (identifier_expression
+                    (lower_identifier)))
+                (primary_expression
+                  (identifier_expression
+                    (lower_identifier)))))))))))
+
+================================================================================
+If else expression
+================================================================================
+
+fn value(ok: Bool) -> String {
+  if ok { "pass" } else { "fail" }
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (function_declaration
+    (lower_identifier)
+    (parameter_clause
+      (parameter_list
+        (parameter
+          (binding_pattern
+            (lower_identifier))
+          (slot_type
+            (type_primary
+              (type_path
+                (upper_identifier)))))))
+    (return_type
+      (type_primary
+        (type_path
+          (upper_identifier))))
+    (block
+      (statement_list
+        (if_expression
+          (primary_expression
+            (identifier_expression
+              (lower_identifier)))
+          (block
+            (statement_list
+              (primary_expression
+                (string_literal
+                  (string_content)))))
+          (else_clause
+            (block
+              (statement_list
+                (primary_expression
+                  (string_literal
+                    (string_content)))))))))))
+
+================================================================================
+If else if chain
+================================================================================
+
+fn value(x: I64) -> String {
+  if x > 0 {
+    "positive"
+  } else if x < 0 {
+    "negative"
+  } else {
+    "zero"
+  }
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (function_declaration
+    (lower_identifier)
+    (parameter_clause
+      (parameter_list
+        (parameter
+          (binding_pattern
+            (lower_identifier))
+          (slot_type
+            (type_primary
+              (type_path
+                (upper_identifier)))))))
+    (return_type
+      (type_primary
+        (type_path
+          (upper_identifier))))
+    (block
+      (statement_list
+        (if_expression
+          (comparison_expression
+            (primary_expression
+              (identifier_expression
+                (lower_identifier)))
+            (primary_expression
+              (integer_literal)))
+          (block
+            (statement_list
+              (primary_expression
+                (string_literal
+                  (string_content)))))
+          (else_clause
+            (if_expression
+              (comparison_expression
+                (primary_expression
+                  (identifier_expression
+                    (lower_identifier)))
+                (primary_expression
+                  (integer_literal)))
+              (block
+                (statement_list
+                  (primary_expression
+                    (string_literal
+                      (string_content)))))
+              (else_clause
+                (block
+                  (statement_list
+                    (primary_expression
+                      (string_literal
+                        (string_content)))))))))))))
