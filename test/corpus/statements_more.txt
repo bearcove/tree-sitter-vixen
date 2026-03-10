@@ -321,3 +321,85 @@ fn value() -> () {
     (block
       (statement_list
         (return_statement)))))
+
+================================================================================
+Nested type declarations in statement position
+================================================================================
+
+fn outer() -> U64 {
+  struct Inner {
+    value: U64,
+  };
+  enum Choice {
+    struct Some,
+  };
+  newtype Id of U64;
+  type MaybeInner = Inner?;
+  fn helper(item: Inner) -> U64 {
+    item.value
+  };
+  0
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (function_declaration
+    (lower_identifier)
+    (parameter_clause)
+    (return_type
+      (type_primary
+        (type_path
+          (upper_identifier))))
+    (block
+      (statement_list
+        (struct_declaration
+          (upper_identifier)
+          (struct_declaration_body
+            (struct_field_declaration
+              (lower_identifier)
+              (slot_type
+                (type_primary
+                  (type_path
+                    (upper_identifier)))))))
+        (enum_declaration
+          (upper_identifier)
+          (enum_declaration_body
+            (enum_variant_declaration
+              (upper_identifier))))
+        (newtype_declaration
+          (upper_identifier)
+          (type_primary
+            (type_path
+              (upper_identifier))))
+        (type_alias_declaration
+          (upper_identifier)
+          (type_alias_value
+            (optional_type
+              (type_primary
+                (type_path
+                  (upper_identifier))))))
+        (function_declaration
+          (lower_identifier)
+          (parameter_clause
+            (parameter_list
+              (parameter
+                (binding_pattern
+                  (lower_identifier))
+                (slot_type
+                  (type_primary
+                    (type_path
+                      (upper_identifier)))))))
+          (return_type
+            (type_primary
+              (type_path
+                (upper_identifier))))
+          (block
+            (statement_list
+              (field_expression
+                (primary_expression
+                  (identifier_expression
+                    (lower_identifier)))
+                (lower_identifier)))))
+        (primary_expression
+          (integer_literal))))))

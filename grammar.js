@@ -56,9 +56,9 @@ module.exports = grammar({
   ],
 
   rules: {
-    // Top level is a statement list — same as a block body.
-    // This means doc snippets with bare expressions parse correctly.
-    document: ($) => repeat($.statement),
+    // Top level is the same statement model as a block body, but file-scope
+    // semicolons remain optional between statements.
+    document: ($) => repeat(seq($.statement, optional(";"))),
 
     statement_list: ($) => seq($.statement, repeat(seq(";", $.statement)), optional(";")),
 

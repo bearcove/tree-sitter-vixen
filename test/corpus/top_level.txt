@@ -210,3 +210,55 @@ enum Direction {
         (upper_identifier))
       (enum_variant_declaration
         (upper_identifier)))))
+
+================================================================================
+Top-level statement mix
+================================================================================
+
+let seed = 1;
+seed;
+
+fn helper(x: U64) -> U64 {
+  x
+}
+
+helper seed
+
+--------------------------------------------------------------------------------
+
+(document
+  (binding_statement
+    (binding_pattern
+      (lower_identifier))
+    (primary_expression
+      (integer_literal)))
+  (primary_expression
+    (identifier_expression
+      (lower_identifier)))
+  (function_declaration
+    (lower_identifier)
+    (parameter_clause
+      (parameter_list
+        (parameter
+          (binding_pattern
+            (lower_identifier))
+          (slot_type
+            (type_primary
+              (type_path
+                (upper_identifier)))))))
+    (return_type
+      (type_primary
+        (type_path
+          (upper_identifier))))
+    (block
+      (statement_list
+        (primary_expression
+          (identifier_expression
+            (lower_identifier))))))
+  (application_expression
+    (primary_expression
+      (identifier_expression
+        (lower_identifier)))
+    (primary_expression
+      (identifier_expression
+        (lower_identifier)))))
