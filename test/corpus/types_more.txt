@@ -235,7 +235,7 @@ Function type
 ================================================================================
 
 fn value(f: Fn(String) -> U64) -> U64 {
-  f("x")
+  f "x"
 }
 
 --------------------------------------------------------------------------------
@@ -263,23 +263,20 @@ fn value(f: Fn(String) -> U64) -> U64 {
           (upper_identifier))))
     (block
       (statement_list
-        (call_expression
+        (application_expression
           (primary_expression
             (identifier_expression
               (lower_identifier)))
-          (argument_list
-            (argument_list_items
-              (argument
-                (primary_expression
-                  (string_literal
-                    (string_content)))))))))))
+          (primary_expression
+            (string_literal
+              (string_content))))))))
 
 ================================================================================
 Function type with capabilities
 ================================================================================
 
 fn value(f: Fn(Path) #fs #discover -> Blob) -> Blob {
-  f(path)
+  f path
 }
 
 --------------------------------------------------------------------------------
@@ -312,16 +309,13 @@ fn value(f: Fn(Path) #fs #discover -> Blob) -> Blob {
           (upper_identifier))))
     (block
       (statement_list
-        (call_expression
+        (application_expression
           (primary_expression
             (identifier_expression
               (lower_identifier)))
-          (argument_list
-            (argument_list_items
-              (argument
-                (primary_expression
-                  (identifier_expression
-                    (lower_identifier)))))))))))
+          (primary_expression
+            (identifier_expression
+              (lower_identifier))))))))
 
 ================================================================================
 Dotted type path

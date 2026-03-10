@@ -1,197 +1,9 @@
 ================================================================================
-Simple call
-================================================================================
-
-fn value() -> U64 {
-  add(1, 2)
-}
-
---------------------------------------------------------------------------------
-
-(document
-  (function_declaration
-    (lower_identifier)
-    (parameter_clause)
-    (return_type
-      (type_primary
-        (type_path
-          (upper_identifier))))
-    (block
-      (statement_list
-        (call_expression
-          (primary_expression
-            (identifier_expression
-              (lower_identifier)))
-          (argument_list
-            (argument_list_items
-              (argument
-                (primary_expression
-                  (integer_literal)))
-              (argument
-                (primary_expression
-                  (integer_literal))))))))))
-
-================================================================================
-Trailing comma call
-================================================================================
-
-fn value() -> U64 {
-  add(1, 2,)
-}
-
---------------------------------------------------------------------------------
-
-(document
-  (function_declaration
-    (lower_identifier)
-    (parameter_clause)
-    (return_type
-      (type_primary
-        (type_path
-          (upper_identifier))))
-    (block
-      (statement_list
-        (call_expression
-          (primary_expression
-            (identifier_expression
-              (lower_identifier)))
-          (argument_list
-            (argument_list_items
-              (argument
-                (primary_expression
-                  (integer_literal)))
-              (argument
-                (primary_expression
-                  (integer_literal))))))))))
-
-================================================================================
-Keyword argument call
-================================================================================
-
-fn value() -> String {
-  greet("Amos"; cheerful: true)
-}
-
---------------------------------------------------------------------------------
-
-(document
-  (function_declaration
-    (lower_identifier)
-    (parameter_clause)
-    (return_type
-      (type_primary
-        (type_path
-          (upper_identifier))))
-    (block
-      (statement_list
-        (call_expression
-          (primary_expression
-            (identifier_expression
-              (lower_identifier)))
-          (argument_list
-            (argument_list_items
-              (argument
-                (primary_expression
-                  (string_literal
-                    (string_content)))))
-            (keyword_argument_section
-              (keyword_argument_item
-                (keyword_argument
-                  (lower_identifier)
-                  (primary_expression
-                    (boolean_literal)))))))))))
-
-================================================================================
-Keyword spread call
-================================================================================
-
-fn value(defaults: Config) -> String {
-  render("page.html"; ..defaults, title: "Home")
-}
-
---------------------------------------------------------------------------------
-
-(document
-  (function_declaration
-    (lower_identifier)
-    (parameter_clause
-      (parameter_list
-        (parameter
-          (binding_pattern
-            (lower_identifier))
-          (slot_type
-            (type_primary
-              (type_path
-                (upper_identifier)))))))
-    (return_type
-      (type_primary
-        (type_path
-          (upper_identifier))))
-    (block
-      (statement_list
-        (call_expression
-          (primary_expression
-            (identifier_expression
-              (lower_identifier)))
-          (argument_list
-            (argument_list_items
-              (argument
-                (primary_expression
-                  (string_literal
-                    (string_content)))))
-            (keyword_argument_section
-              (keyword_argument_item
-                (spread_expression
-                  (primary_expression
-                    (identifier_expression
-                      (lower_identifier)))))
-              (keyword_argument_item
-                (keyword_argument
-                  (lower_identifier)
-                  (primary_expression
-                    (string_literal
-                      (string_content))))))))))))
-
-================================================================================
-Field access
-================================================================================
-
-fn value(point: Point) -> U64 {
-  point.x
-}
-
---------------------------------------------------------------------------------
-
-(document
-  (function_declaration
-    (lower_identifier)
-    (parameter_clause
-      (parameter_list
-        (parameter
-          (binding_pattern
-            (lower_identifier))
-          (slot_type
-            (type_primary
-              (type_path
-                (upper_identifier)))))))
-    (return_type
-      (type_primary
-        (type_path
-          (upper_identifier))))
-    (block
-      (statement_list
-        (field_expression
-          (primary_expression
-            (identifier_expression
-              (lower_identifier)))
-          (lower_identifier))))))
-
-================================================================================
-UFCS chain
+Method chain with postfix invocation
 ================================================================================
 
 fn value(items: Array[U64]) -> Array[U64] {
-  items.map($ + 1).filter($ > 3).to_array()
+  items.map ($ + 1).filter ($ > 3).to_array!
 }
 
 --------------------------------------------------------------------------------
@@ -222,224 +34,42 @@ fn value(items: Array[U64]) -> Array[U64] {
                 (upper_identifier)))))))
     (block
       (statement_list
-        (call_expression
-          (field_expression
-            (call_expression
-              (field_expression
-                (call_expression
-                  (field_expression
-                    (primary_expression
-                      (identifier_expression
-                        (lower_identifier)))
-                    (lower_identifier))
-                  (argument_list
-                    (argument_list_items
-                      (argument
-                        (additive_expression
-                          (primary_expression
-                            (dollar_identifier))
-                          (primary_expression
-                            (integer_literal)))))))
-                (lower_identifier))
-              (argument_list
-                (argument_list_items
-                  (argument
-                    (comparison_expression
-                      (primary_expression
-                        (dollar_identifier))
-                      (primary_expression
-                        (integer_literal)))))))
-            (lower_identifier))
-          (argument_list))))))
-
-================================================================================
-Index expression
-================================================================================
-
-fn value(items: Array[String]) -> String {
-  items[0]
-}
-
---------------------------------------------------------------------------------
-
-(document
-  (function_declaration
-    (lower_identifier)
-    (parameter_clause
-      (parameter_list
-        (parameter
-          (binding_pattern
-            (lower_identifier))
-          (slot_type
-            (type_primary
-              (type_path
-                (upper_identifier)
-                (type_arguments
-                  (type_primary
-                    (type_path
-                      (upper_identifier))))))))))
-    (return_type
-      (type_primary
-        (type_path
-          (upper_identifier))))
-    (block
-      (statement_list
-        (index_expression
-          (primary_expression
-            (identifier_expression
-              (lower_identifier)))
-          (primary_expression
-            (integer_literal)))))))
-
-================================================================================
-Partial application positional
-================================================================================
-
-fn value() -> Fn(U64) -> U64 {
-  @add(2, ..)
-}
-
---------------------------------------------------------------------------------
-
-(document
-  (function_declaration
-    (lower_identifier)
-    (parameter_clause)
-    (return_type
-      (type_primary
-        (function_type
-          (type_primary
-            (type_path
-              (upper_identifier)))
-          (type_primary
-            (type_path
-              (upper_identifier))))))
-    (block
-      (statement_list
-        (partial_application_expression
-          (primary_expression
-            (identifier_expression
-              (lower_identifier)))
-          (argument_list
-            (argument_list_items
-              (argument
-                (primary_expression
-                  (integer_literal)))
-              (argument
-                (argument_placeholder)))))))))
-
-================================================================================
-Partial application keyword
-================================================================================
-
-fn value(src: String) -> Fn(String) -> String {
-  @compile(src; optimize: true)
-}
-
---------------------------------------------------------------------------------
-
-(document
-  (function_declaration
-    (lower_identifier)
-    (parameter_clause
-      (parameter_list
-        (parameter
-          (binding_pattern
-            (lower_identifier))
-          (slot_type
-            (type_primary
-              (type_path
-                (upper_identifier)))))))
-    (return_type
-      (type_primary
-        (function_type
-          (type_primary
-            (type_path
-              (upper_identifier)))
-          (type_primary
-            (type_path
-              (upper_identifier))))))
-    (block
-      (statement_list
-        (partial_application_expression
-          (primary_expression
-            (identifier_expression
-              (lower_identifier)))
-          (argument_list
-            (argument_list_items
-              (argument
-                (primary_expression
-                  (identifier_expression
-                    (lower_identifier)))))
-            (keyword_argument_section
-              (keyword_argument_item
-                (keyword_argument
-                  (lower_identifier)
-                  (primary_expression
-                    (boolean_literal)))))))))))
-
-================================================================================
-Arrow closure expression body
-================================================================================
-
-fn value(items: Array[U64]) -> Array[U64] {
-  items.map((x) => x + 1)
-}
-
---------------------------------------------------------------------------------
-
-(document
-  (function_declaration
-    (lower_identifier)
-    (parameter_clause
-      (parameter_list
-        (parameter
-          (binding_pattern
-            (lower_identifier))
-          (slot_type
-            (type_primary
-              (type_path
-                (upper_identifier)
-                (type_arguments
-                  (type_primary
-                    (type_path
-                      (upper_identifier))))))))))
-    (return_type
-      (type_primary
-        (type_path
-          (upper_identifier)
-          (type_arguments
-            (type_primary
-              (type_path
-                (upper_identifier)))))))
-    (block
-      (statement_list
-        (call_expression
-          (field_expression
-            (primary_expression
-              (identifier_expression
-                (lower_identifier)))
-            (lower_identifier))
-          (argument_list
-            (argument_list_items
-              (argument
-                (arrow_closure
-                  (closure_parameter_clause
-                    (binding_pattern
-                      (lower_identifier)))
+        (application_expression
+          (application_expression
+            (field_expression
+              (primary_expression
+                (identifier_expression
+                  (lower_identifier)))
+              (lower_identifier))
+            (field_expression
+              (primary_expression
+                (tuple_expression
                   (additive_expression
                     (primary_expression
-                      (identifier_expression
-                        (lower_identifier)))
+                      (dollar_identifier))
                     (primary_expression
-                      (integer_literal))))))))))))
+                      (integer_literal)))))
+              (lower_identifier)))
+          (invocation_expression
+            (field_expression
+              (primary_expression
+                (tuple_expression
+                  (comparison_expression
+                    (primary_expression
+                      (dollar_identifier))
+                    (primary_expression
+                      (integer_literal)))))
+              (lower_identifier))))))))
 
 ================================================================================
 Arrow closure block body
 ================================================================================
 
 fn value(items: Array[U64]) -> Array[U64] {
-  items.map((x) => { let y = x + 1; y })
+  items.map ((item) => {
+    let next = item + 1;
+    next
+  })
 }
 
 --------------------------------------------------------------------------------
@@ -470,92 +100,40 @@ fn value(items: Array[U64]) -> Array[U64] {
                 (upper_identifier)))))))
     (block
       (statement_list
-        (call_expression
+        (application_expression
           (field_expression
             (primary_expression
               (identifier_expression
                 (lower_identifier)))
             (lower_identifier))
-          (argument_list
-            (argument_list_items
-              (argument
-                (arrow_closure
-                  (closure_parameter_clause
-                    (binding_pattern
-                      (lower_identifier)))
-                  (primary_expression
-                    (block
-                      (statement_list
-                        (binding_statement
-                          (binding_pattern
-                            (lower_identifier))
-                          (additive_expression
-                            (primary_expression
-                              (identifier_expression
-                                (lower_identifier)))
-                            (primary_expression
-                              (integer_literal))))
-                        (primary_expression
-                          (identifier_expression
-                            (lower_identifier)))))))))))))))
-
-================================================================================
-Dollar shorthand
-================================================================================
-
-fn value(items: Array[U64]) -> Array[U64] {
-  items.map($ + 1)
-}
-
---------------------------------------------------------------------------------
-
-(document
-  (function_declaration
-    (lower_identifier)
-    (parameter_clause
-      (parameter_list
-        (parameter
-          (binding_pattern
-            (lower_identifier))
-          (slot_type
-            (type_primary
-              (type_path
-                (upper_identifier)
-                (type_arguments
-                  (type_primary
-                    (type_path
-                      (upper_identifier))))))))))
-    (return_type
-      (type_primary
-        (type_path
-          (upper_identifier)
-          (type_arguments
-            (type_primary
-              (type_path
-                (upper_identifier)))))))
-    (block
-      (statement_list
-        (call_expression
-          (field_expression
-            (primary_expression
-              (identifier_expression
-                (lower_identifier)))
-            (lower_identifier))
-          (argument_list
-            (argument_list_items
-              (argument
-                (additive_expression
-                  (primary_expression
-                    (dollar_identifier))
-                  (primary_expression
-                    (integer_literal)))))))))))
+          (primary_expression
+            (tuple_expression
+              (arrow_closure
+                (closure_parameter_clause
+                  (binding_pattern
+                    (lower_identifier)))
+                (primary_expression
+                  (block
+                    (statement_list
+                      (binding_statement
+                        (binding_pattern
+                          (lower_identifier))
+                        (additive_expression
+                          (primary_expression
+                            (identifier_expression
+                              (lower_identifier)))
+                          (primary_expression
+                            (integer_literal))))
+                      (primary_expression
+                        (identifier_expression
+                          (lower_identifier))))))))))))))
 
 ================================================================================
 Numbered dollar shorthand
 ================================================================================
 
 fn value(items: Array[U64]) -> U64 {
-  items.reduce($0 + $1)
+  items.reduce ($0 + $1)
 }
 
 --------------------------------------------------------------------------------
@@ -582,17 +160,111 @@ fn value(items: Array[U64]) -> U64 {
           (upper_identifier))))
     (block
       (statement_list
-        (call_expression
+        (application_expression
           (field_expression
             (primary_expression
               (identifier_expression
                 (lower_identifier)))
             (lower_identifier))
-          (argument_list
-            (argument_list_items
-              (argument
-                (additive_expression
-                  (primary_expression
-                    (dollar_identifier))
-                  (primary_expression
-                    (dollar_identifier)))))))))))
+          (primary_expression
+            (tuple_expression
+              (additive_expression
+                (primary_expression
+                  (dollar_identifier))
+                (primary_expression
+                  (dollar_identifier))))))))))
+
+================================================================================
+Pipe placeholder
+================================================================================
+
+fn value(ar: String, ranlib: String) -> String {
+  cexec [ar] |> cexec [ranlib, _]
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (function_declaration
+    (lower_identifier)
+    (parameter_clause
+      (parameter_list
+        (parameter
+          (binding_pattern
+            (lower_identifier))
+          (slot_type
+            (type_primary
+              (type_path
+                (upper_identifier)))))
+        (parameter
+          (binding_pattern
+            (lower_identifier))
+          (slot_type
+            (type_primary
+              (type_path
+                (upper_identifier)))))))
+    (return_type
+      (type_primary
+        (type_path
+          (upper_identifier))))
+    (block
+      (statement_list
+        (pipe_expression
+          (application_expression
+            (primary_expression
+              (identifier_expression
+                (lower_identifier)))
+            (primary_expression
+              (array_expression
+                (primary_expression
+                  (identifier_expression
+                    (lower_identifier))))))
+          (application_expression
+            (primary_expression
+              (identifier_expression
+                (lower_identifier)))
+            (primary_expression
+              (array_expression
+                (primary_expression
+                  (identifier_expression
+                    (lower_identifier)))
+                (primary_expression
+                  (pipe_placeholder))))))))))
+
+================================================================================
+Zero-arg method invocation
+================================================================================
+
+fn value(blob: Blob) -> String {
+  blob.utf8!.trim!
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (function_declaration
+    (lower_identifier)
+    (parameter_clause
+      (parameter_list
+        (parameter
+          (binding_pattern
+            (lower_identifier))
+          (slot_type
+            (type_primary
+              (type_path
+                (upper_identifier)))))))
+    (return_type
+      (type_primary
+        (type_path
+          (upper_identifier))))
+    (block
+      (statement_list
+        (invocation_expression
+          (field_expression
+            (invocation_expression
+              (field_expression
+                (primary_expression
+                  (identifier_expression
+                    (lower_identifier)))
+                (lower_identifier)))
+            (lower_identifier)))))))

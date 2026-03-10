@@ -713,7 +713,7 @@ Fallible postfix expression
 ================================================================================
 
 fn value() -> U64? {
-  lookup()?
+  lookup ()?
 }
 
 --------------------------------------------------------------------------------
@@ -729,9 +729,10 @@ fn value() -> U64? {
             (upper_identifier)))))
     (block
       (statement_list
-        (fallible_expression
-          (call_expression
+        (application_expression
+          (primary_expression
+            (identifier_expression
+              (lower_identifier)))
+          (fallible_expression
             (primary_expression
-              (identifier_expression
-                (lower_identifier)))
-            (argument_list)))))))
+              (unit_expression))))))))

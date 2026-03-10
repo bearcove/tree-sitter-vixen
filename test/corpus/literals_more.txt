@@ -356,7 +356,7 @@ Map expression
 ================================================================================
 
 fn value() -> Map[String, U64] {
-  %{ "a" => 1, "b" => 2 }
+  { "a": 1, "b": 2 }
 }
 
 --------------------------------------------------------------------------------
@@ -381,13 +381,13 @@ fn value() -> Map[String, U64] {
         (primary_expression
           (map_expression
             (map_entry
-              (primary_expression
+              (map_key_expression
                 (string_literal
                   (string_content)))
               (primary_expression
                 (integer_literal)))
             (map_entry
-              (primary_expression
+              (map_key_expression
                 (string_literal
                   (string_content)))
               (primary_expression

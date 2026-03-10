@@ -212,7 +212,7 @@ Keyword only call
 ================================================================================
 
 fn value() -> String {
-  connect(; host: "localhost", port: 8080)
+  connect where { host: "localhost", port: 8080 }
 }
 
 --------------------------------------------------------------------------------
@@ -227,23 +227,20 @@ fn value() -> String {
           (upper_identifier))))
     (block
       (statement_list
-        (call_expression
+        (keyword_application_expression
           (primary_expression
             (identifier_expression
               (lower_identifier)))
-          (argument_list
-            (keyword_argument_section
-              (keyword_argument_item
-                (keyword_argument
-                  (lower_identifier)
-                  (primary_expression
-                    (string_literal
-                      (string_content)))))
-              (keyword_argument_item
-                (keyword_argument
-                  (lower_identifier)
-                  (primary_expression
-                    (integer_literal)))))))))))
+          (record_expression
+            (record_field
+              (lower_identifier)
+              (primary_expression
+                (string_literal
+                  (string_content))))
+            (record_field
+              (lower_identifier)
+              (primary_expression
+                (integer_literal)))))))))
 
 ================================================================================
 Unit pattern
@@ -427,7 +424,7 @@ Function type with no arguments
 ================================================================================
 
 fn value(f: Fn() -> ()) -> () {
-  f()
+  f ()
 }
 
 --------------------------------------------------------------------------------
@@ -450,11 +447,12 @@ fn value(f: Fn() -> ()) -> () {
         (unit_type)))
     (block
       (statement_list
-        (call_expression
+        (application_expression
           (primary_expression
             (identifier_expression
               (lower_identifier)))
-          (argument_list))))))
+          (primary_expression
+            (unit_expression)))))))
 
 ================================================================================
 Optional dotted type path
@@ -500,7 +498,7 @@ fn value() -> U64 {
   fn first[T](items: Array[T]) -> T {
     items[0]
   };
-  first(xs)
+  first xs
 }
 
 --------------------------------------------------------------------------------
@@ -545,13 +543,10 @@ fn value() -> U64 {
                     (lower_identifier)))
                 (primary_expression
                   (integer_literal))))))
-        (call_expression
+        (application_expression
           (primary_expression
             (identifier_expression
               (lower_identifier)))
-          (argument_list
-            (argument_list_items
-              (argument
-                (primary_expression
-                  (identifier_expression
-                    (lower_identifier)))))))))))
+          (primary_expression
+            (identifier_expression
+              (lower_identifier))))))))

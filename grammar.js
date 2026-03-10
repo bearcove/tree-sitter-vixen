@@ -1,17 +1,17 @@
 const PREC = {
-  with: 1,
-  logical_or: 2,
-  logical_and: 3,
-  equality: 4,
-  comparison: 5,
-  range: 6,
-  additive: 7,
-  multiplicative: 8,
-  unary: 9,
-  type_ops: 10,
-  postfix_fallible: 11,
-  field: 12,
-  call: 13,
+  pipe: 1,
+  with: 2,
+  logical_or: 3,
+  logical_and: 4,
+  equality: 5,
+  comparison: 6,
+  range: 7,
+  additive: 8,
+  multiplicative: 9,
+  unary: 10,
+  type_ops: 11,
+  application: 12,
+  postfix: 13,
 };
 
 module.exports = grammar({
@@ -37,18 +37,23 @@ module.exports = grammar({
     [$.unit_expression, $.closure_parameter_clause],
     [$.array_pattern, $.array_expression],
     [$.type_path, $.identifier_expression],
-    [$.attribute, $.identifier_expression],
     [$.binding_pattern, $.pattern],
     [$.binding_pattern, $.pattern, $.identifier_expression],
     [$.binding_pattern, $.identifier_expression],
     [$.literal_pattern, $.primary_expression],
     [$.type_path, $.variant_pattern, $.identifier_expression],
     [$.type_path, $.variant_pattern],
-    [$.struct_pattern_field, $.identifier_expression],
-    [$.struct_pattern, $.block],
-    [$.struct_pattern, $.struct_literal_body],
+    [$.record_expression, $.map_expression],
+    [$.block, $.map_expression, $.record_expression],
+    [$.struct_pattern, $.block, $.map_expression, $.record_expression],
+    [$.struct_pattern, $.map_expression, $.record_expression],
     [$.pattern, $.identifier_expression],
     [$.type_expression, $.optional_type],
+    [$.wildcard_pattern, $.pipe_placeholder],
+    [$.identifier_expression, $.record_field],
+    [$.expression, $._postfix_target],
+    [$.struct_pattern_field, $.record_field],
+    [$.struct_pattern_field, $.identifier_expression, $.record_field],
   ],
 
   rules: {
@@ -407,6 +412,7 @@ module.exports = grammar({
         $.if_expression,
         $.match_expression,
         $.arrow_closure,
+        $.pipe_expression,
         $.with_expression,
         $.logical_or_expression,
         $.logical_and_expression,
@@ -419,13 +425,13 @@ module.exports = grammar({
         $.cast_expression,
         $.type_ascription_expression,
         $.is_expression,
-        $.fallible_expression,
-        $.field_expression,
-        $.call_expression,
-        $.index_expression,
-        $.partial_application_expression,
-        $.struct_literal_expression,
+        $.keyword_application_expression,
+        $.application_expression,
         $.primary_expression,
+        $.field_expression,
+        $.index_expression,
+        $.invocation_expression,
+        $.fallible_expression,
       ),
 
     primary_expression: ($) =>
@@ -436,7 +442,10 @@ module.exports = grammar({
         $.boolean_literal,
         $.string_literal,
         $.interpolated_string,
+        $.path_literal,
+        $.interpolated_path_literal,
         $.array_expression,
+        $.record_expression,
         $.map_expression,
         $.unit_expression,
         $.tuple_expression,
@@ -444,6 +453,8 @@ module.exports = grammar({
         $.block,
         $.import_expression,
         $.fail_expression,
+        $.method_adapter_expression,
+        $.pipe_placeholder,
         $.dollar_identifier,
       ),
 
@@ -478,6 +489,22 @@ module.exports = grammar({
 
     string_interpolation: ($) => seq("${", $.expression, "}"),
 
+    path_literal: ($) => token(seq("@", /[A-Za-z0-9_./-]+/)),
+
+    interpolated_path_literal: ($) =>
+      seq(
+        "@(",
+        repeat(
+          choice(
+            alias(token.immediate(/[A-Za-z0-9_./-]+/), $.path_content),
+            $.path_interpolation,
+          ),
+        ),
+        ")",
+      ),
+
+    path_interpolation: ($) => seq("{", $.expression, "}"),
+
     escape_sequence: ($) => token(/\\([\\`"nrt0]|u\{[0-9A-Fa-f]{1,6}\})/),
 
     unit_expression: ($) => seq("(", ")"),
@@ -493,24 +520,44 @@ module.exports = grammar({
       seq("[", optional(commaSep1(choice($.expression, $.spread_expression))), optional(","), "]"),
 
     map_expression: ($) =>
-      seq("%{", optional(commaSep1($.map_entry)), optional(","), "}"),
+      seq("{", optional(commaSep1($.map_entry)), optional(","), "}"),
 
-    map_entry: ($) => seq(field("key", $.expression), "=>", field("value", $.expression)),
+    map_entry: ($) => seq(field("key", $.map_key_expression), ":", field("value", $.expression)),
 
-    spread_expression: ($) => prec.right(20, seq("..", $.expression)),
+    map_key_expression: ($) =>
+      choice(
+        $.integer_literal,
+        $.float_literal,
+        $.boolean_literal,
+        $.string_literal,
+        $.interpolated_string,
+        $.path_literal,
+        $.interpolated_path_literal,
+        $.parenthesized_expression,
+        $.tuple_expression,
+        $.array_expression,
+        $.record_expression,
+        $.map_expression,
+        $.method_adapter_expression,
+        $.field_expression,
+        $.index_expression,
+        $.invocation_expression,
+        $.fallible_expression,
+        $.upper_identifier,
+        $.dollar_identifier,
+      ),
 
-    struct_literal_expression: ($) =>
-      seq(field("type", $.type_path), field("body", $.struct_literal_body)),
+    record_expression: ($) =>
+      seq("{", optional(commaSep1($.record_field)), optional(","), "}"),
 
-    struct_literal_body: ($) =>
-      seq("{", optional(commaSep1($.struct_literal_field)), optional(","), "}"),
-
-    struct_literal_field: ($) =>
+    record_field: ($) =>
       choice(
         seq(field("name", $.lower_identifier), ":", field("value", $.expression)),
-        seq(":", field("shorthand", $.lower_identifier)),
+        field("shorthand", $.lower_identifier),
         seq("..", field("spread", $.expression)),
       ),
+
+    spread_expression: ($) => prec.right(20, seq("..", $.expression)),
 
     update_body: ($) => seq("{", optional(commaSep1($.update_field)), optional(","), "}"),
 
@@ -524,57 +571,126 @@ module.exports = grammar({
     field_path: ($) =>
       seq($.lower_identifier, repeat(seq(".", $.lower_identifier))),
 
-    call_expression: ($) =>
-      prec.left(PREC.call, seq(field("function", $.expression), field("arguments", $.argument_list))),
-
-    argument_list: ($) =>
-      seq(
-        "(",
-        optional($.argument_list_items),
-        optional($.keyword_argument_section),
-        ")",
-      ),
-
-    argument_list_items: ($) => seq(commaSep1($.argument), optional(",")),
-
-    keyword_argument_section: ($) =>
-      seq(";", optional(seq(commaSep1($.keyword_argument_item), optional(",")))),
-
-    keyword_argument_item: ($) =>
+    application_expression: ($) =>
       choice(
-        $.keyword_argument,
-        $.spread_expression,
+        prec.left(
+          PREC.application + 1,
+          seq(
+            field(
+              "function",
+              choice(
+                $._postfix_target,
+                $.application_expression,
+                $.keyword_application_expression,
+              ),
+            ),
+            field("argument", $.map_expression),
+          ),
+        ),
+        prec.left(
+          PREC.application + 1,
+          seq(
+            field(
+              "function",
+              choice(
+                $._postfix_target,
+                $.application_expression,
+                $.keyword_application_expression,
+              ),
+            ),
+            field("argument", $.record_expression),
+          ),
+        ),
+        prec.left(
+          PREC.application,
+          seq(
+            field(
+              "function",
+              choice(
+                $._postfix_target,
+                $.application_expression,
+                $.keyword_application_expression,
+              ),
+            ),
+            field("argument", $._application_argument),
+          ),
+        ),
       ),
 
-    argument: ($) =>
+    _application_argument: ($) =>
       choice(
-        $.argument_placeholder,
-        $.spread_expression,
-        $.expression,
+        $._postfix_target,
+        $.if_expression,
+        $.match_expression,
+        $.arrow_closure,
       ),
 
-    keyword_argument: ($) =>
-      seq(field("name", $.lower_identifier), ":", field("value", $.expression)),
-
-    argument_placeholder: ($) => prec(20, ".."),
+    keyword_application_expression: ($) =>
+      choice(
+        prec.left(
+          PREC.application,
+          seq(
+            field(
+              "function",
+              choice(
+                $._postfix_target,
+                $.application_expression,
+                $.keyword_application_expression,
+              ),
+            ),
+            "where",
+            field("argument", $.record_expression),
+          ),
+        ),
+        prec.left(
+          PREC.application,
+          seq(
+            field(
+              "function",
+              choice(
+                $._postfix_target,
+                $.application_expression,
+                $.keyword_application_expression,
+              ),
+            ),
+            "where",
+            field("argument", $.expression),
+          ),
+        ),
+      ),
 
     index_expression: ($) =>
-      prec.left(PREC.call, seq(field("value", $.expression), "[", field("index", $.expression), "]")),
+      prec.left(
+        PREC.postfix,
+        seq(field("value", $._postfix_target), $._immediate_l_bracket, field("index", $.expression), "]"),
+      ),
 
     field_expression: ($) =>
       prec.left(
-        PREC.field,
+        PREC.postfix,
         seq(
-          field("value", $.expression),
-          ".",
+          field("value", $._postfix_target),
+          $._immediate_dot,
           field("field", choice($.lower_identifier, $.upper_identifier, $.tuple_index)),
         ),
       ),
 
-    tuple_index: ($) => /_[0-9]+/,
+    invocation_expression: ($) =>
+      prec.left(PREC.postfix, seq(field("value", $._postfix_target), $._immediate_bang)),
 
-    partial_application_expression: ($) =>
-      prec.right(seq("@", field("function", $.expression), field("arguments", $.argument_list))),
+    fallible_expression: ($) =>
+      prec.left(PREC.postfix, seq(field("value", $._postfix_target), $._immediate_question)),
+
+    _postfix_target: ($) =>
+      choice(
+        $.primary_expression,
+        $.field_expression,
+        $.index_expression,
+        $.invocation_expression,
+        $.fallible_expression,
+      ),
+
+    tuple_index: ($) => /_[0-9]+/,
 
     if_expression: ($) =>
       prec.right(
@@ -605,6 +721,9 @@ module.exports = grammar({
 
     unary_expression: ($) =>
       prec.right(PREC.unary, seq(choice("-", "!"), field("argument", $.expression))),
+
+    pipe_expression: ($) =>
+      prec.left(PREC.pipe, seq(field("value", $.expression), "|>", field("function", $.expression))),
 
     logical_or_expression: ($) =>
       prec.left(PREC.logical_or, seq($.expression, "||", $.expression)),
@@ -650,11 +769,24 @@ module.exports = grammar({
     arrow_closure: ($) =>
       prec.right(seq(field("parameters", $.closure_parameter_clause), "=>", field("body", $.expression))),
 
-    fallible_expression: ($) => prec.left(PREC.postfix_fallible, seq($.expression, "?")),
-
     dollar_identifier: ($) => /\$[0-9]*/,
 
-    lower_identifier: ($) => /[a-z_][A-Za-z0-9_]*/,
+    pipe_placeholder: ($) => "_",
+
+    method_adapter_expression: ($) =>
+      prec.right(
+        seq(".", field("field", choice($.lower_identifier, $.upper_identifier, $.tuple_index)), optional($._immediate_bang)),
+      ),
+
+    _immediate_l_bracket: ($) => token.immediate("["),
+
+    _immediate_dot: ($) => token.immediate("."),
+
+    _immediate_bang: ($) => token.immediate("!"),
+
+    _immediate_question: ($) => token.immediate("?"),
+
+    lower_identifier: ($) => /(?:[a-z][A-Za-z0-9_]*|_[A-Za-z0-9_]+)/,
 
     upper_identifier: ($) => /[A-Z][A-Za-z0-9_]*/,
   },

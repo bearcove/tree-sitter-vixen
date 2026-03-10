@@ -1,21 +1,18 @@
 ================================================================================
-Keyword parameters and arguments
+Unary application and keyword application
 ================================================================================
 
-fn compile(
+fn demo(
+  compile: Fn(String) -> String,
+  exec: Fn(Array[String]) -> String,
   src: String,
-  ; optimize: Bool = false,
-  loudly: Bool = false,
+  cc: String,
+  file: String,
+  defaults: Config,
 ) -> String {
-  src
-}
-
-fn demo(src: String, tasks: Array[Task]) -> String {
-  compile(src; optimize: true, loudly: true);
-  compile(; optimize: true);
-  tasks.map((task) => task.name);
-  @compile(..; loudly: true);
-  @compile(src; optimize: true)
+  compile src where { optimize: true, loudly: true };
+  compile src where defaults;
+  exec [cc, "-c", file] where { ..defaults, mounts: src }
 }
 
 --------------------------------------------------------------------------------
@@ -30,38 +27,29 @@ fn demo(src: String, tasks: Array[Task]) -> String {
             (lower_identifier))
           (slot_type
             (type_primary
-              (type_path
-                (upper_identifier))))))
-      (keyword_parameter_section
-        (keyword_parameter
-          (lower_identifier)
+              (function_type
+                (type_primary
+                  (type_path
+                    (upper_identifier)))
+                (type_primary
+                  (type_path
+                    (upper_identifier)))))))
+        (parameter
+          (binding_pattern
+            (lower_identifier))
           (slot_type
             (type_primary
-              (type_path
-                (upper_identifier))))
-          (primary_expression
-            (boolean_literal)))
-        (keyword_parameter
-          (lower_identifier)
-          (slot_type
-            (type_primary
-              (type_path
-                (upper_identifier))))
-          (primary_expression
-            (boolean_literal)))))
-    (return_type
-      (type_primary
-        (type_path
-          (upper_identifier))))
-    (block
-      (statement_list
-        (primary_expression
-          (identifier_expression
-            (lower_identifier))))))
-  (function_declaration
-    (lower_identifier)
-    (parameter_clause
-      (parameter_list
+              (function_type
+                (type_primary
+                  (type_path
+                    (upper_identifier)
+                    (type_arguments
+                      (type_primary
+                        (type_path
+                          (upper_identifier))))))
+                (type_primary
+                  (type_path
+                    (upper_identifier)))))))
         (parameter
           (binding_pattern
             (lower_identifier))
@@ -75,97 +63,210 @@ fn demo(src: String, tasks: Array[Task]) -> String {
           (slot_type
             (type_primary
               (type_path
-                (upper_identifier)
-                (type_arguments
-                  (type_primary
-                    (type_path
-                      (upper_identifier))))))))))
+                (upper_identifier)))))
+        (parameter
+          (binding_pattern
+            (lower_identifier))
+          (slot_type
+            (type_primary
+              (type_path
+                (upper_identifier)))))
+        (parameter
+          (binding_pattern
+            (lower_identifier))
+          (slot_type
+            (type_primary
+              (type_path
+                (upper_identifier)))))))
     (return_type
       (type_primary
         (type_path
           (upper_identifier))))
     (block
       (statement_list
-        (call_expression
-          (primary_expression
-            (identifier_expression
-              (lower_identifier)))
-          (argument_list
-            (argument_list_items
-              (argument
-                (primary_expression
-                  (identifier_expression
-                    (lower_identifier)))))
-            (keyword_argument_section
-              (keyword_argument_item
-                (keyword_argument
-                  (lower_identifier)
-                  (primary_expression
-                    (boolean_literal))))
-              (keyword_argument_item
-                (keyword_argument
-                  (lower_identifier)
-                  (primary_expression
-                    (boolean_literal)))))))
-        (call_expression
-          (primary_expression
-            (identifier_expression
-              (lower_identifier)))
-          (argument_list
-            (keyword_argument_section
-              (keyword_argument_item
-                (keyword_argument
-                  (lower_identifier)
-                  (primary_expression
-                    (boolean_literal)))))))
-        (call_expression
-          (field_expression
+        (keyword_application_expression
+          (application_expression
             (primary_expression
               (identifier_expression
                 (lower_identifier)))
-            (lower_identifier))
-          (argument_list
-            (argument_list_items
-              (argument
-                (arrow_closure
-                  (closure_parameter_clause
-                    (binding_pattern
-                      (lower_identifier)))
-                  (field_expression
-                    (primary_expression
-                      (identifier_expression
-                        (lower_identifier)))
-                    (lower_identifier)))))))
-        (partial_application_expression
+            (primary_expression
+              (identifier_expression
+                (lower_identifier))))
+          (record_expression
+            (record_field
+              (lower_identifier)
+              (primary_expression
+                (boolean_literal)))
+            (record_field
+              (lower_identifier)
+              (primary_expression
+                (boolean_literal)))))
+        (keyword_application_expression
+          (application_expression
+            (primary_expression
+              (identifier_expression
+                (lower_identifier)))
+            (primary_expression
+              (identifier_expression
+                (lower_identifier))))
           (primary_expression
             (identifier_expression
-              (lower_identifier)))
-          (argument_list
-            (argument_list_items
-              (argument
-                (argument_placeholder)))
-            (keyword_argument_section
-              (keyword_argument_item
-                (keyword_argument
-                  (lower_identifier)
-                  (primary_expression
-                    (boolean_literal)))))))
-        (partial_application_expression
-          (primary_expression
-            (identifier_expression
-              (lower_identifier)))
-          (argument_list
-            (argument_list_items
-              (argument
+              (lower_identifier))))
+        (keyword_application_expression
+          (application_expression
+            (primary_expression
+              (identifier_expression
+                (lower_identifier)))
+            (primary_expression
+              (array_expression
                 (primary_expression
                   (identifier_expression
-                    (lower_identifier)))))
-            (keyword_argument_section
-              (keyword_argument_item
-                (keyword_argument
-                  (lower_identifier)
-                  (primary_expression
-                    (boolean_literal)))))))))))
+                    (lower_identifier)))
+                (primary_expression
+                  (string_literal
+                    (string_content)))
+                (primary_expression
+                  (identifier_expression
+                    (lower_identifier))))))
+          (record_expression
+            (record_field
+              (primary_expression
+                (identifier_expression
+                  (lower_identifier))))
+            (record_field
+              (lower_identifier)
+              (primary_expression
+                (identifier_expression
+                  (lower_identifier))))))))))
+
+================================================================================
+Tuple and array payload application
+================================================================================
+
+fn demo(
+  pairer: Fn((U64, U64)) -> U64,
+  lister: Fn(Array[U64]) -> U64,
+  next: Fn(U64) -> Fn(U64) -> U64,
+  x: U64,
+  y: U64,
+) -> U64 {
+  pairer (x, y);
+  lister [x, y];
+  next x y
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (function_declaration
+    (lower_identifier)
+    (parameter_clause
+      (parameter_list
+        (parameter
+          (binding_pattern
+            (lower_identifier))
+          (slot_type
+            (type_primary
+              (function_type
+                (type_primary
+                  (tuple_type
+                    (type_primary
+                      (type_path
+                        (upper_identifier)))
+                    (type_primary
+                      (type_path
+                        (upper_identifier)))))
+                (type_primary
+                  (type_path
+                    (upper_identifier)))))))
+        (parameter
+          (binding_pattern
+            (lower_identifier))
+          (slot_type
+            (type_primary
+              (function_type
+                (type_primary
+                  (type_path
+                    (upper_identifier)
+                    (type_arguments
+                      (type_primary
+                        (type_path
+                          (upper_identifier))))))
+                (type_primary
+                  (type_path
+                    (upper_identifier)))))))
+        (parameter
+          (binding_pattern
+            (lower_identifier))
+          (slot_type
+            (type_primary
+              (function_type
+                (type_primary
+                  (type_path
+                    (upper_identifier)))
+                (type_primary
+                  (function_type
+                    (type_primary
+                      (type_path
+                        (upper_identifier)))
+                    (type_primary
+                      (type_path
+                        (upper_identifier)))))))))
+        (parameter
+          (binding_pattern
+            (lower_identifier))
+          (slot_type
+            (type_primary
+              (type_path
+                (upper_identifier)))))
+        (parameter
+          (binding_pattern
+            (lower_identifier))
+          (slot_type
+            (type_primary
+              (type_path
+                (upper_identifier)))))))
+    (return_type
+      (type_primary
+        (type_path
+          (upper_identifier))))
+    (block
+      (statement_list
+        (application_expression
+          (primary_expression
+            (identifier_expression
+              (lower_identifier)))
+          (primary_expression
+            (tuple_expression
+              (primary_expression
+                (identifier_expression
+                  (lower_identifier)))
+              (primary_expression
+                (identifier_expression
+                  (lower_identifier))))))
+        (application_expression
+          (primary_expression
+            (identifier_expression
+              (lower_identifier)))
+          (primary_expression
+            (array_expression
+              (primary_expression
+                (identifier_expression
+                  (lower_identifier)))
+              (primary_expression
+                (identifier_expression
+                  (lower_identifier))))))
+        (application_expression
+          (application_expression
+            (primary_expression
+              (identifier_expression
+                (lower_identifier)))
+            (primary_expression
+              (identifier_expression
+                (lower_identifier))))
+          (primary_expression
+            (identifier_expression
+              (lower_identifier))))))))
 
 ================================================================================
 Keyword-only parameter list

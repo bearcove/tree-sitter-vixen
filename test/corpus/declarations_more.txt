@@ -386,11 +386,12 @@ fn Blob(s: String) -> Blob {
           (upper_identifier))))
     (block
       (statement_list
-        (struct_literal_expression
-          (type_path
-            (upper_identifier))
-          (struct_literal_body
-            (struct_literal_field
+        (application_expression
+          (primary_expression
+            (identifier_expression
+              (upper_identifier)))
+          (record_expression
+            (record_field
               (lower_identifier)
               (primary_expression
                 (identifier_expression

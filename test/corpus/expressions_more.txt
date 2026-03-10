@@ -1,42 +1,9 @@
 ================================================================================
-Struct literal
+Record payload application
 ================================================================================
 
-fn value() -> Point {
-  Point { x: 1.0, y: 2.0 }
-}
-
---------------------------------------------------------------------------------
-
-(document
-  (function_declaration
-    (lower_identifier)
-    (parameter_clause)
-    (return_type
-      (type_primary
-        (type_path
-          (upper_identifier))))
-    (block
-      (statement_list
-        (struct_literal_expression
-          (type_path
-            (upper_identifier))
-          (struct_literal_body
-            (struct_literal_field
-              (lower_identifier)
-              (primary_expression
-                (float_literal)))
-            (struct_literal_field
-              (lower_identifier)
-              (primary_expression
-                (float_literal)))))))))
-
-================================================================================
-Struct literal shorthand
-================================================================================
-
-fn value(x: F64) -> Point {
-  Point { :x, y: 2.0 }
+fn value(x: F64, y: F64) -> Point {
+  Point { x, y: y }
 }
 
 --------------------------------------------------------------------------------
@@ -52,6 +19,13 @@ fn value(x: F64) -> Point {
           (slot_type
             (type_primary
               (type_path
+                (upper_identifier)))))
+        (parameter
+          (binding_pattern
+            (lower_identifier))
+          (slot_type
+            (type_primary
+              (type_path
                 (upper_identifier)))))))
     (return_type
       (type_primary
@@ -59,23 +33,25 @@ fn value(x: F64) -> Point {
           (upper_identifier))))
     (block
       (statement_list
-        (struct_literal_expression
-          (type_path
-            (upper_identifier))
-          (struct_literal_body
-            (struct_literal_field
+        (application_expression
+          (primary_expression
+            (identifier_expression
+              (upper_identifier)))
+          (record_expression
+            (record_field
               (lower_identifier))
-            (struct_literal_field
+            (record_field
               (lower_identifier)
               (primary_expression
-                (float_literal)))))))))
+                (identifier_expression
+                  (lower_identifier))))))))))
 
 ================================================================================
-Struct literal spread
+Record spread
 ================================================================================
 
-fn value(p: Point) -> Point {
-  Point { ..p, y: 3.0 }
+fn value(defaults: Config) -> Config {
+  Config { ..defaults, optimize: true }
 }
 
 --------------------------------------------------------------------------------
@@ -98,18 +74,72 @@ fn value(p: Point) -> Point {
           (upper_identifier))))
     (block
       (statement_list
-        (struct_literal_expression
-          (type_path
-            (upper_identifier))
-          (struct_literal_body
-            (struct_literal_field
+        (application_expression
+          (primary_expression
+            (identifier_expression
+              (upper_identifier)))
+          (record_expression
+            (record_field
               (primary_expression
                 (identifier_expression
                   (lower_identifier))))
-            (struct_literal_field
+            (record_field
               (lower_identifier)
               (primary_expression
-                (float_literal)))))))))
+                (boolean_literal)))))))))
+
+================================================================================
+Map payload application
+================================================================================
+
+fn value(lua_exe: Blob, liblua: Blob) -> Tree {
+  Tree { @bin/lua: lua_exe, @lib/liblua.a: liblua }
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (function_declaration
+    (lower_identifier)
+    (parameter_clause
+      (parameter_list
+        (parameter
+          (binding_pattern
+            (lower_identifier))
+          (slot_type
+            (type_primary
+              (type_path
+                (upper_identifier)))))
+        (parameter
+          (binding_pattern
+            (lower_identifier))
+          (slot_type
+            (type_primary
+              (type_path
+                (upper_identifier)))))))
+    (return_type
+      (type_primary
+        (type_path
+          (upper_identifier))))
+    (block
+      (statement_list
+        (application_expression
+          (primary_expression
+            (identifier_expression
+              (upper_identifier)))
+          (map_expression
+            (map_entry
+              (map_key_expression
+                (path_literal))
+              (primary_expression
+                (identifier_expression
+                  (lower_identifier))))
+            (map_entry
+              (map_key_expression
+                (path_literal))
+              (primary_expression
+                (identifier_expression
+                  (lower_identifier))))))))))
 
 ================================================================================
 With expression
@@ -228,8 +258,8 @@ fn value() -> Module {
 Fail expression
 ================================================================================
 
-fn value(msg: String) -> String {
-  fail msg
+fn value(message: String) -> String {
+  fail message
 }
 
 --------------------------------------------------------------------------------
@@ -262,11 +292,10 @@ fn value(msg: String) -> String {
 Block expression
 ================================================================================
 
-fn value(rect: Rect) -> U64 {
+fn value() -> U64 {
   {
-    let w = rect.width;
-    let h = rect.height;
-    w * h
+    let x = 1;
+    x + 1
   }
 }
 
@@ -275,15 +304,7 @@ fn value(rect: Rect) -> U64 {
 (document
   (function_declaration
     (lower_identifier)
-    (parameter_clause
-      (parameter_list
-        (parameter
-          (binding_pattern
-            (lower_identifier))
-          (slot_type
-            (type_primary
-              (type_path
-                (upper_identifier)))))))
+    (parameter_clause)
     (return_type
       (type_primary
         (type_path
@@ -296,33 +317,21 @@ fn value(rect: Rect) -> U64 {
               (binding_statement
                 (binding_pattern
                   (lower_identifier))
-                (field_expression
-                  (primary_expression
-                    (identifier_expression
-                      (lower_identifier)))
-                  (lower_identifier)))
-              (binding_statement
-                (binding_pattern
-                  (lower_identifier))
-                (field_expression
-                  (primary_expression
-                    (identifier_expression
-                      (lower_identifier)))
-                  (lower_identifier)))
-              (multiplicative_expression
+                (primary_expression
+                  (integer_literal)))
+              (additive_expression
                 (primary_expression
                   (identifier_expression
                     (lower_identifier)))
                 (primary_expression
-                  (identifier_expression
-                    (lower_identifier)))))))))))
+                  (integer_literal))))))))))
 
 ================================================================================
 If else expression
 ================================================================================
 
-fn value(ok: Bool) -> String {
-  if ok { "pass" } else { "fail" }
+fn value(flag: Bool) -> String {
+  if flag { "yes" } else { "no" }
 }
 
 --------------------------------------------------------------------------------
@@ -365,14 +374,8 @@ fn value(ok: Bool) -> String {
 If else if chain
 ================================================================================
 
-fn value(x: I64) -> String {
-  if x > 0 {
-    "positive"
-  } else if x < 0 {
-    "negative"
-  } else {
-    "zero"
-  }
+fn value(n: U64) -> String {
+  if n == 0 { "zero" } else if n == 1 { "one" } else { "many" }
 }
 
 --------------------------------------------------------------------------------
@@ -396,7 +399,7 @@ fn value(x: I64) -> String {
     (block
       (statement_list
         (if_expression
-          (comparison_expression
+          (equality_expression
             (primary_expression
               (identifier_expression
                 (lower_identifier)))
@@ -409,7 +412,7 @@ fn value(x: I64) -> String {
                   (string_content)))))
           (else_clause
             (if_expression
-              (comparison_expression
+              (equality_expression
                 (primary_expression
                   (identifier_expression
                     (lower_identifier)))

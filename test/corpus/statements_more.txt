@@ -129,7 +129,7 @@ fn value(x: U64) -> U64 {
   fn add_one(y: U64) -> U64 {
     y + 1
   };
-  add_one(x)
+  add_one x
 }
 
 --------------------------------------------------------------------------------
@@ -175,16 +175,13 @@ fn value(x: U64) -> U64 {
                     (lower_identifier)))
                 (primary_expression
                   (integer_literal))))))
-        (call_expression
+        (application_expression
           (primary_expression
             (identifier_expression
               (lower_identifier)))
-          (argument_list
-            (argument_list_items
-              (argument
-                (primary_expression
-                  (identifier_expression
-                    (lower_identifier)))))))))))
+          (primary_expression
+            (identifier_expression
+              (lower_identifier))))))))
 
 ================================================================================
 Compound update statement

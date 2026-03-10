@@ -10,7 +10,7 @@ fn run(point: Pair, config: Config, state: State) -> U64 {
   config with= {
     build.jobs: 4,
   };
-  state.count = add_one(x);
+  state.count = add_one x;
   return y
 }
 
@@ -101,16 +101,13 @@ fn run(point: Pair, config: Config, state: State) -> U64 {
                 (identifier_expression
                   (lower_identifier)))
               (lower_identifier)))
-          (call_expression
+          (application_expression
             (primary_expression
               (identifier_expression
                 (lower_identifier)))
-            (argument_list
-              (argument_list_items
-                (argument
-                  (primary_expression
-                    (identifier_expression
-                      (lower_identifier))))))))
+            (primary_expression
+              (identifier_expression
+                (lower_identifier)))))
         (return_statement
           (primary_expression
             (identifier_expression

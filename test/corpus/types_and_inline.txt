@@ -6,7 +6,7 @@ fn parse(
   handler: Fn(String) #discover -> String?,
   input: String?,
 ) -> String? {
-  let result: String? = handler("hello");
+  let result: String? = handler "hello";
   result
 }
 
@@ -56,16 +56,13 @@ fn parse(
               (type_primary
                 (type_path
                   (upper_identifier)))))
-          (call_expression
+          (application_expression
             (primary_expression
               (identifier_expression
                 (lower_identifier)))
-            (argument_list
-              (argument_list_items
-                (argument
-                  (primary_expression
-                    (string_literal
-                      (string_content))))))))
+            (primary_expression
+              (string_literal
+                (string_content)))))
         (primary_expression
           (identifier_expression
             (lower_identifier)))))))
