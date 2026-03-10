@@ -30,7 +30,7 @@ struct Point {
 Attributed struct declaration
 ================================================================================
 
-@rename("point")
+#[rename("point")]
 struct Point {
   x: F64,
 }
@@ -181,7 +181,7 @@ Attributed enum variant
 ================================================================================
 
 enum Event {
-  @rename("click")
+  #[rename("click")]
   struct Click {
     x: F64,
   },

@@ -26,7 +26,6 @@ module.exports = grammar({
     $.pattern,
     $.type_expression,
     $.statement,
-    $.top_level_item,
   ],
 
   conflicts: ($) => [
@@ -57,22 +56,19 @@ module.exports = grammar({
   ],
 
   rules: {
-    document: ($) => repeat($.top_level_item),
-
-    top_level_item: ($) =>
-      choice(
-        $.function_declaration,
-        $.struct_declaration,
-        $.enum_declaration,
-        $.newtype_declaration,
-        $.type_alias_declaration,
-      ),
+    // Top level is a statement list — same as a block body.
+    // This means doc snippets with bare expressions parse correctly.
+    document: ($) => repeat($.statement),
 
     statement_list: ($) => seq($.statement, repeat(seq(";", $.statement)), optional(";")),
 
     statement: ($) =>
       choice(
         $.function_declaration,
+        $.struct_declaration,
+        $.enum_declaration,
+        $.newtype_declaration,
+        $.type_alias_declaration,
         $.binding_statement,
         $.compound_update_statement,
         $.field_assignment_statement,
@@ -102,9 +98,10 @@ module.exports = grammar({
 
     attribute: ($) =>
       seq(
-        "@",
+        "#[",
         field("name", $.lower_identifier),
         optional(field("arguments", $.attribute_arguments)),
+        "]",
       ),
 
     attribute_arguments: ($) =>
@@ -120,7 +117,7 @@ module.exports = grammar({
       seq(field("name", $.lower_identifier), ":", field("value", $.expression)),
 
     function_declaration: ($) =>
-      seq(
+      prec.right(seq(
         optional(field("attributes", $.attribute_list)),
         "fn",
         field("name", choice($.lower_identifier, $.upper_identifier)),
@@ -129,16 +126,16 @@ module.exports = grammar({
         optional(field("capabilities", $.capability_list)),
         optional(field("return_type", $.return_type)),
         optional(field("body", $.block)),
-      ),
+      )),
 
     struct_declaration: ($) =>
-      seq(
+      prec.right(seq(
         optional(field("attributes", $.attribute_list)),
         "struct",
         field("name", $.upper_identifier),
         optional(field("type_parameters", $.type_parameter_list)),
         optional(field("body", $.struct_declaration_body)),
-      ),
+      )),
 
     enum_declaration: ($) =>
       seq(
@@ -257,7 +254,7 @@ module.exports = grammar({
 
     field_assignment_target: ($) => $.field_expression,
 
-    return_statement: ($) => seq("return", optional($.expression)),
+    return_statement: ($) => prec.right(seq("return", optional($.expression))),
 
     parameter_clause: ($) =>
       seq(
@@ -325,7 +322,7 @@ module.exports = grammar({
     capability_tag: ($) => seq("#", $.lower_identifier),
 
     type_path: ($) =>
-      prec.left(
+      prec.right(
         seq(
           field("head", $.upper_identifier),
           repeat(seq(".", field("member", $.upper_identifier))),

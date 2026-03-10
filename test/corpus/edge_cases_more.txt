@@ -12,7 +12,7 @@ Empty document
 Attribute without arguments
 ================================================================================
 
-@untagged
+#[untagged]
 enum Content {
   struct Text,
 }
@@ -33,8 +33,8 @@ enum Content {
 Multiple attributes on declaration
 ================================================================================
 
-@tag("type")
-@rename_all("kebab-case")
+#[tag("type")]
+#[rename_all("kebab-case")]
 enum Shape {
   struct Circle,
 }
@@ -68,7 +68,7 @@ Attribute on struct field
 ================================================================================
 
 struct ApiResponse {
-  @rename("status_code")
+  #[rename("status_code")]
   status: U64,
 }
 

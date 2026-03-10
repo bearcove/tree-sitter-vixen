@@ -2,9 +2,9 @@
 Top-level declarations
 ================================================================================
 
-@tag("kind", content: "payload")
+#[tag("kind", content: "payload")]
 enum Message[T] {
-  @rename("hello")
+  #[rename("hello")]
   struct Hello {
     body: T,
   },

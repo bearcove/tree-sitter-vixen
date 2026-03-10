@@ -45,8 +45,8 @@
   "with="
   "?"
   "!"
-  "@"
   "#"
+  "#["
 ] @punctuation.delimiter
 
 [

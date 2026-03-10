@@ -160,6 +160,10 @@
         "named": true
       },
       {
+        "type": "enum_declaration",
+        "named": true
+      },
+      {
         "type": "expression",
         "named": true
       },
@@ -172,25 +176,11 @@
         "named": true
       },
       {
-        "type": "return_statement",
-        "named": true
-      }
-    ]
-  },
-  {
-    "type": "top_level_item",
-    "named": true,
-    "subtypes": [
-      {
-        "type": "enum_declaration",
-        "named": true
-      },
-      {
-        "type": "function_declaration",
-        "named": true
-      },
-      {
         "type": "newtype_declaration",
+        "named": true
+      },
+      {
+        "type": "return_statement",
         "named": true
       },
       {
@@ -739,7 +729,7 @@
       "required": false,
       "types": [
         {
-          "type": "top_level_item",
+          "type": "statement",
           "named": true
         }
       ]
@@ -3008,6 +2998,10 @@
   },
   {
     "type": "#",
+    "named": false
+  },
+  {
+    "type": "#[",
     "named": false
   },
   {
