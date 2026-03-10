@@ -2,9 +2,9 @@
 Top-level declarations
 ================================================================================
 
-#[tag("kind", content: "payload")]
+#[tag = "kind", content = "payload"]
 enum Message[T] {
-  #[rename("hello")]
+  #[rename = "hello"]
   struct Hello {
     body: T,
   },
@@ -38,18 +38,16 @@ fn build[T](input: BuildInput, ; release: Bool = false) #fs -> T {
   (enum_declaration
     (attribute_list
       (attribute
-        (lower_identifier)
-        (attribute_arguments
-          (attribute_argument
-            (primary_expression
-              (string_literal
-                (string_content))))
-          (attribute_argument
-            (keyword_attribute_argument
-              (lower_identifier)
-              (primary_expression
-                (string_literal
-                  (string_content))))))))
+        (attribute_entry
+          (lower_identifier)
+          (primary_expression
+            (string_literal
+              (string_content))))
+        (attribute_entry
+          (lower_identifier)
+          (primary_expression
+            (string_literal
+              (string_content))))))
     (upper_identifier)
     (type_parameter_list
       (type_parameter
@@ -58,12 +56,11 @@ fn build[T](input: BuildInput, ; release: Bool = false) #fs -> T {
       (enum_variant_declaration
         (attribute_list
           (attribute
-            (lower_identifier)
-            (attribute_arguments
-              (attribute_argument
-                (primary_expression
-                  (string_literal
-                    (string_content)))))))
+            (attribute_entry
+              (lower_identifier)
+              (primary_expression
+                (string_literal
+                  (string_content))))))
         (upper_identifier)
         (struct_declaration_body
           (struct_field_declaration

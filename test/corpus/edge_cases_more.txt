@@ -23,7 +23,8 @@ enum Content {
   (enum_declaration
     (attribute_list
       (attribute
-        (lower_identifier)))
+        (attribute_entry
+          (lower_identifier))))
     (upper_identifier)
     (enum_declaration_body
       (enum_variant_declaration
@@ -33,8 +34,8 @@ enum Content {
 Multiple attributes on declaration
 ================================================================================
 
-#[tag("type")]
-#[rename_all("kebab-case")]
+#[tag = "type"]
+#[rename_all = "kebab-case"]
 enum Shape {
   struct Circle,
 }
@@ -45,19 +46,17 @@ enum Shape {
   (enum_declaration
     (attribute_list
       (attribute
-        (lower_identifier)
-        (attribute_arguments
-          (attribute_argument
-            (primary_expression
-              (string_literal
-                (string_content))))))
+        (attribute_entry
+          (lower_identifier)
+          (primary_expression
+            (string_literal
+              (string_content)))))
       (attribute
-        (lower_identifier)
-        (attribute_arguments
-          (attribute_argument
-            (primary_expression
-              (string_literal
-                (string_content)))))))
+        (attribute_entry
+          (lower_identifier)
+          (primary_expression
+            (string_literal
+              (string_content))))))
     (upper_identifier)
     (enum_declaration_body
       (enum_variant_declaration
@@ -68,7 +67,7 @@ Attribute on struct field
 ================================================================================
 
 struct ApiResponse {
-  #[rename("status_code")]
+  #[rename = "status_code"]
   status: U64,
 }
 
@@ -81,12 +80,11 @@ struct ApiResponse {
       (struct_field_declaration
         (attribute_list
           (attribute
-            (lower_identifier)
-            (attribute_arguments
-              (attribute_argument
-                (primary_expression
-                  (string_literal
-                    (string_content)))))))
+            (attribute_entry
+              (lower_identifier)
+              (primary_expression
+                (string_literal
+                  (string_content))))))
         (lower_identifier)
         (slot_type
           (type_primary

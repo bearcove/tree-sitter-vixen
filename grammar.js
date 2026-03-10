@@ -99,22 +99,16 @@ module.exports = grammar({
     attribute: ($) =>
       seq(
         "#[",
-        field("name", $.lower_identifier),
-        optional(field("arguments", $.attribute_arguments)),
+        commaSep1($.attribute_entry),
+        optional(","),
         "]",
       ),
 
-    attribute_arguments: ($) =>
-      seq("(", optional(commaSep1($.attribute_argument)), optional(","), ")"),
-
-    attribute_argument: ($) =>
+    attribute_entry: ($) =>
       choice(
-        $.keyword_attribute_argument,
-        $.expression,
+        seq(field("key", $.lower_identifier), "=", field("value", $.expression)),
+        field("key", $.lower_identifier),
       ),
-
-    keyword_attribute_argument: ($) =>
-      seq(field("name", $.lower_identifier), ":", field("value", $.expression)),
 
     function_declaration: ($) =>
       prec.right(seq(
