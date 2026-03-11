@@ -69,6 +69,8 @@ module.exports = grammar({
         $.enum_declaration,
         $.newtype_declaration,
         $.type_alias_declaration,
+        $.namespace_declaration,
+        $.extend_declaration,
         $.binding_statement,
         $.compound_update_statement,
         $.field_assignment_statement,
@@ -148,6 +150,22 @@ module.exports = grammar({
         optional(field("type_parameters", $.type_parameter_list)),
         "of",
         field("value", $.type_expression),
+      ),
+
+    namespace_declaration: ($) =>
+      seq(
+        optional(field("attributes", $.attribute_list)),
+        "namespace",
+        field("name", $.type_path),
+        field("body", $.block),
+      ),
+
+    extend_declaration: ($) =>
+      seq(
+        optional(field("attributes", $.attribute_list)),
+        "extend",
+        field("name", $.type_path),
+        field("body", $.block),
       ),
 
     type_alias_declaration: ($) =>

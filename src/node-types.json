@@ -168,11 +168,19 @@
         "named": true
       },
       {
+        "type": "extend_declaration",
+        "named": true
+      },
+      {
         "type": "field_assignment_statement",
         "named": true
       },
       {
         "type": "function_declaration",
+        "named": true
+      },
+      {
+        "type": "namespace_declaration",
         "named": true
       },
       {
@@ -845,6 +853,42 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "extend_declaration",
+    "named": true,
+    "fields": {
+      "attributes": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "attribute_list",
+            "named": true
+          }
+        ]
+      },
+      "body": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "block",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "type_path",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -1865,6 +1909,42 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "namespace_declaration",
+    "named": true,
+    "fields": {
+      "attributes": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "attribute_list",
+            "named": true
+          }
+        ]
+      },
+      "body": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "block",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "type_path",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -3125,6 +3205,10 @@
     "named": true
   },
   {
+    "type": "extend",
+    "named": false
+  },
+  {
     "type": "fail",
     "named": false
   },
@@ -3171,6 +3255,10 @@
   },
   {
     "type": "match",
+    "named": false
+  },
+  {
+    "type": "namespace",
     "named": false
   },
   {
